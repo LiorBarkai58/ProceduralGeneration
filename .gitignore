@@ -1,0 +1,58 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+MemoryCaptures/
+
+# Visual Studio / JetBrains Rider
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Auto-generated Unity files
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+
+# Crash logs
+sysinfo.txt
+
+# Unity Collaborate (optional, if not used)
+.collabignore
+.collab/
+
+# Rider-specific
+*.sln.iml
+
+# Build artifacts
+*.apk
+*.aab
+*.xcodeproj
+*.xcworkspace
+*.xcuserstate
+
+# Addressables
+/Assets/AddressableAssetsData/*/AssetBundles/
+
+# PlasticSCM
+.plastic/
+*.plastic*
+
+# Unity Cloud Build
+*.unitypackage
