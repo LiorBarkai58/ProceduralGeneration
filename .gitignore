@@ -56,3 +56,4 @@ sysinfo.txt
 
 # Unity Cloud Build
 *.unitypackage
+/.vs/ProceduralGeneration/FileContentIndex
