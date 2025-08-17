@@ -5,16 +5,15 @@ using UnityEngine;
 public class DugeonGenerator
 {
     
-    List<RoomNode> allNodesCollection = new List<RoomNode>();
+    public List<RoomNode> allNodesCollection = new List<RoomNode>();
     private int dungeonWidth;
     private int dungeonLength;
-
     public DugeonGenerator(int dungeonWidth, int dungeonLength)
     {
         this.dungeonWidth = dungeonWidth;
         this.dungeonLength = dungeonLength;
     }
-
+    
 
 
     public List<Node> CalculateDungeon(int maxIterations, int roomWidthMin, int roomLengthMin, float roomBottomCornerModifier, float roomTopCornerMidifier, int roomOffset, int corridorWidth)

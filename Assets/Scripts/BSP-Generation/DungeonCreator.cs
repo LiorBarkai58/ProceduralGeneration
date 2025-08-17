@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BSP_Generation;
 using UnityEngine;
+using Random = System.Random;
 
 public class DungeonCreator : MonoBehaviour
 {
@@ -22,6 +23,12 @@ public class DungeonCreator : MonoBehaviour
 
     [Range(1, 3)]
     [SerializeField] private int floorCount = 1;
+    
+    [Header("Special Room")]
+    [SerializeField] private float specialRoomChance;
+    [SerializeField] private int maxSpecialRooms = 3;
+
+    [SerializeField] private GameObject specialRoomObject;
 
     [Header("Positions")] [SerializeField] private Vector3 startPosition;
     [SerializeField] private GameObject portalPrefab;
@@ -54,15 +61,39 @@ public class DungeonCreator : MonoBehaviour
             wallParent.transform.parent = transform;
             wallParent.transform.position += Vector3.up * (WallHeight * i);;
             
-            Instantiate(portalPrefab, new Vector3(dungeonWidth - startPosition.x, i * WallHeight + 1, dungeonLength - startPosition.z), Quaternion.identity, transform);
             possibleDoorVerticalPosition = new List<Vector3Int>();
             possibleDoorHorizontalPosition = new List<Vector3Int>();
             possibleWallHorizontalPosition = new List<Vector3Int>();
             possibleWallVerticalPosition = new List<Vector3Int>();
+
+            float maxDistance = 0;
+            Node furthestRoom = listOfRooms[0];
             for (int j = 0; j < listOfRooms.Count; j++)
             {
+                if (listOfRooms[j] is RoomNode && Vector2Int.Distance(new Vector2Int(0, 0), listOfRooms[j].BottomLeftAreaCorner) > maxDistance)
+                {
+                    maxDistance = Vector2Int.Distance(new Vector2Int(0, 0), listOfRooms[j].BottomLeftAreaCorner);
+                    furthestRoom = listOfRooms[j];
+                }
+                
                 CreateMesh(listOfRooms[j].BottomLeftAreaCorner, listOfRooms[j].TopRightAreaCorner, i);
             }
+
+            int specialRoomCount = 0;
+            foreach (Node room in listOfRooms)
+            {
+                if (room is not RoomNode) continue;
+                if (UnityEngine.Random.Range(0, 100) < specialRoomChance && specialRoomCount < maxSpecialRooms)
+                {
+                    Vector2Int currentRoomMiddle =
+                        (room.BottomLeftAreaCorner + room.TopRightAreaCorner) / 2;
+                    Instantiate(specialRoomObject, new Vector3(currentRoomMiddle.x,WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
+                    specialRoomCount++;
+                }
+            }
+            Vector2Int xzPosition =
+                (furthestRoom.BottomLeftAreaCorner + furthestRoom.TopRightAreaCorner) / 2;
+            Instantiate(portalPrefab, new Vector3(xzPosition.x,  WallHeight * i, xzPosition.y), Quaternion.identity, transform);
             CreateMesh(Vector2.zero, new Vector2(dungeonWidth, dungeonLength), i, true);
             CreateWalls(wallParent);    
         }
@@ -180,5 +211,9 @@ public class DungeonCreator : MonoBehaviour
                 DestroyImmediate(item.gameObject);
             }
         }
+    }
+
+    private void MakeRoomSpecial(RoomNode room)
+    {
     }
 }
