@@ -30,6 +30,8 @@ public class DungeonCreator : MonoBehaviour
 
     [SerializeField] private GameObject specialRoomObject;
 
+    [SerializeField] private List<RoomDefinition> specialDefinitions;
+
     [Header("Positions")] [SerializeField] private Vector3 startPosition;
     [SerializeField] private GameObject portalPrefab;
     public ConfigurableWall wallVertical, wallHorizontal;
@@ -51,12 +53,14 @@ public class DungeonCreator : MonoBehaviour
         {
             DugeonGenerator generator = new DugeonGenerator(dungeonWidth, dungeonLength);
             var listOfRooms = generator.CalculateDungeon(maxIterations,
+                
                 roomWidthMin,
                 roomLengthMin,
                 roomBottomCornerModifier,
                 roomTopCornerMidifier,
                 roomOffset,
-                corridorWidth);
+                corridorWidth,
+                specialDefinitions);
             GameObject wallParent = new GameObject("WallParent");
             wallParent.transform.parent = transform;
             wallParent.transform.position += Vector3.up * (WallHeight * i);;
@@ -82,13 +86,19 @@ public class DungeonCreator : MonoBehaviour
             int specialRoomCount = 0;
             foreach (Node room in listOfRooms)
             {
-                if (room is not RoomNode) continue;
-                if (UnityEngine.Random.Range(0, 100) < specialRoomChance && specialRoomCount < maxSpecialRooms)
+                if (room is RoomNode roomNode)
                 {
-                    Vector2Int currentRoomMiddle =
-                        (room.BottomLeftAreaCorner + room.TopRightAreaCorner) / 2;
-                    Instantiate(specialRoomObject, new Vector3(currentRoomMiddle.x,WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
-                    specialRoomCount++;
+                    switch (roomNode.RoomType)
+                    {
+                        case (RoomType.Type1):
+                            //insert spawning logic similar to 
+                            // Vector2Int currentRoomMiddle =
+                            //     (room.BottomLeftAreaCorner + room.TopRightAreaCorner) / 2;
+                            // Instantiate(specialRoomObject, new Vector3(currentRoomMiddle.x,WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
+                            // specialRoomCount++;
+                            break;
+                        
+                    }
                 }
             }
             Vector2Int xzPosition =
