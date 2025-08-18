@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ad570bc2287e2c41b2f3bb7fe7cbb1f, type: 3}
   m_Name: RoomDefenition
   m_EditorClassIdentifier: 
-  roomType: 0
+  roomType: 2
   roomShape: 0
-  roomSize: 0
-  roomAmount: 0
+  roomSize: 24
   distanceRules: 0
   placementRules: 0

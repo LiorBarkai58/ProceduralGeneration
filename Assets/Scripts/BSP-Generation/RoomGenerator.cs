@@ -40,8 +40,8 @@ public class RoomGenerator
             {
                 if (room.RoomType != RoomType.Normal) continue;
                 //Also check that room isn't special already
-                if (room.Width < definition.roomSize || room.Width > definition.roomSize ||
-                    room.Length < definition.roomSize|| room.Length > definition.roomSize)
+                if ( room.Width > definition.roomSize ||
+                    room.Length > definition.roomSize)
                     continue;
                 
                 room.RoomType = definition.roomType;
