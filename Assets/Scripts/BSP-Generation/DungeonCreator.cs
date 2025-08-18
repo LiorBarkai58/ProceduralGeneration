@@ -28,7 +28,10 @@ public class DungeonCreator : MonoBehaviour
     [SerializeField] private float specialRoomChance;
     [SerializeField] private int maxSpecialRooms = 3;
 
-    [SerializeField] private GameObject specialRoomObject;
+    [SerializeField] private GameObject specialRoomObjectType1;
+    [SerializeField] private GameObject specialRoomObjectType2;
+    [SerializeField] private GameObject specialRoomObjectType3;
+
 
     [SerializeField] private List<RoomDefinition> specialDefinitions;
 
@@ -84,25 +87,33 @@ public class DungeonCreator : MonoBehaviour
             }
 
             int specialRoomCount = 0;
+
             foreach (Node room in listOfRooms)
             {
+                Vector2Int currentRoomMiddle =
+                              (room.BottomLeftAreaCorner + room.TopRightAreaCorner) / 2;
+
                 if (room is RoomNode roomNode)
                 {
                     switch (roomNode.RoomType)
                     {
+                        
                         case (RoomType.Type1):
                             // insert spawning logic similar to 
-                             
+                            
+                            Instantiate(specialRoomObjectType1, new Vector3(currentRoomMiddle.x, WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
+                            specialRoomCount++;
                             print("type1");
                             break;
                         case (RoomType.Type2):
-                            Vector2Int currentRoomMiddle =
-                                (room.BottomLeftAreaCorner + room.TopRightAreaCorner) / 2;
-                            Instantiate(specialRoomObject, new Vector3(currentRoomMiddle.x,WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
+                        
+                            Instantiate(specialRoomObjectType2, new Vector3(currentRoomMiddle.x,WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
                             specialRoomCount++;
                             print("type2");
                             break;
                         case (RoomType.Type3):
+                            Instantiate(specialRoomObjectType3, new Vector3(currentRoomMiddle.x, WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
+                            specialRoomCount++;
                             print("type3");
                             break;
                         default:
