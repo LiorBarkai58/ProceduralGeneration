@@ -15,7 +15,7 @@ public class RoomGenerator
         this.roomWidthMin = roomWidthMin;
     }
 
-    public List<RoomNode> GenerateRoomsInGivenSpaces(List<Node> roomSpaces, float roomBottomCornerModifier, float roomTopCornerMidifier, int roomOffset)
+    public List<RoomNode> GenerateRoomsInGivenSpaces(List<Node> roomSpaces,List<RoomDefinition> specialRooms , float roomBottomCornerModifier, float roomTopCornerMidifier, int roomOffset)
     {
         List<RoomNode> listToReturn = new List<RoomNode>();
         foreach (var space in roomSpaces)
@@ -31,6 +31,23 @@ public class RoomGenerator
             space.TopLeftAreaCorner = new Vector2Int(newBottomLeftPoint.x, newTopRightPoint.y);
             listToReturn.Add((RoomNode)space);
                 
+        }
+
+        foreach (RoomDefinition definition in specialRooms)
+        {
+            //Add max room per definition logic
+            foreach (RoomNode room in listToReturn)
+            {
+                if (room.RoomType != RoomType.Normal) continue;
+                //Also check that room isn't special already
+                if (room.Width < definition.roomSize || room.Width > definition.roomSize ||
+                    room.Length < definition.roomSize|| room.Length > definition.roomSize)
+                    continue;
+                
+                room.RoomType = definition.roomType;
+                break;
+
+            }
         }
         return listToReturn;
     }

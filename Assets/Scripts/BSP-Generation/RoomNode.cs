@@ -10,6 +10,7 @@ public class RoomNode : Node
         this.TreeLayerIndex = index;
     }
 
+    public RoomType RoomType { get; set; } = RoomType.Normal;
     public int Width { get => (int)(TopRightAreaCorner.x - BottomLeftAreaCorner.x); }
     public int Length { get => (int)(TopRightAreaCorner.y - BottomLeftAreaCorner.y); }
 }
