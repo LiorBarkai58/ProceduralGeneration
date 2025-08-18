@@ -91,11 +91,22 @@ public class DungeonCreator : MonoBehaviour
                     switch (roomNode.RoomType)
                     {
                         case (RoomType.Type1):
-                            //insert spawning logic similar to 
-                            // Vector2Int currentRoomMiddle =
-                            //     (room.BottomLeftAreaCorner + room.TopRightAreaCorner) / 2;
-                            // Instantiate(specialRoomObject, new Vector3(currentRoomMiddle.x,WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
-                            // specialRoomCount++;
+                            // insert spawning logic similar to 
+                             
+                            print("type1");
+                            break;
+                        case (RoomType.Type2):
+                            Vector2Int currentRoomMiddle =
+                                (room.BottomLeftAreaCorner + room.TopRightAreaCorner) / 2;
+                            Instantiate(specialRoomObject, new Vector3(currentRoomMiddle.x,WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
+                            specialRoomCount++;
+                            print("type2");
+                            break;
+                        case (RoomType.Type3):
+                            print("type3");
+                            break;
+                        default:
+                            print("normal");
                             break;
                         
                     }
