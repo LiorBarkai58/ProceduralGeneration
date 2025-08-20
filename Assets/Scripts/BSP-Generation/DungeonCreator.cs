@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using BSP_Generation;
+using Unity.AI.Navigation;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = System.Random;
 
@@ -23,7 +25,8 @@ public class DungeonCreator : MonoBehaviour
 
     [Range(1, 3)]
     [SerializeField] private int floorCount = 1;
-    
+
+    [SerializeField] private NavMeshSurface NMSurface;
     [Header("Special Room")]
     [SerializeField] private float specialRoomChance;
     [SerializeField] private int maxSpecialRooms = 3;
@@ -31,7 +34,6 @@ public class DungeonCreator : MonoBehaviour
     [SerializeField] private GameObject specialRoomObjectType1;
     [SerializeField] private GameObject specialRoomObjectType2;
     [SerializeField] private GameObject specialRoomObjectType3;
-
 
     [SerializeField] private List<RoomDefinition> specialDefinitions;
 
@@ -44,8 +46,11 @@ public class DungeonCreator : MonoBehaviour
     List<Vector3Int> possibleWallHorizontalPosition;
     List<Vector3Int> possibleWallVerticalPosition;
     // Start is called before the first frame update
+
+    private LayerMask _groundLayer;
     void Start()
     {
+       _groundLayer = LayerMask.NameToLayer("Floor");
         CreateDungeon();
     }
 
@@ -129,7 +134,7 @@ public class DungeonCreator : MonoBehaviour
             CreateMesh(Vector2.zero, new Vector2(dungeonWidth, dungeonLength), i, true);
             CreateWalls(wallParent);    
         }
-        
+        NMSurface.BuildNavMesh();
     }
 
     private void CreateWalls(GameObject wallParent)
@@ -147,6 +152,7 @@ public class DungeonCreator : MonoBehaviour
     private void CreateWall(GameObject wallParent, Vector3Int wallPosition, ConfigurableWall wallPrefab)
     {
         ConfigurableWall current = Instantiate(wallPrefab, wallPosition, Quaternion.identity, wallParent.transform);
+        current.AddComponent<BoxCollider>();
         current.ConfigureHeight(WallHeight);
         current.transform.localPosition = new Vector3(current.transform.localPosition.x, 0, current.transform.localPosition.z);
     }
@@ -195,6 +201,8 @@ public class DungeonCreator : MonoBehaviour
         dungeonFloor.transform.localScale = Vector3.one;
         dungeonFloor.GetComponent<MeshFilter>().mesh = mesh;
         dungeonFloor.GetComponent<MeshRenderer>().material = material;
+        dungeonFloor.AddComponent<BoxCollider>();
+        dungeonFloor.layer = _groundLayer;
         dungeonFloor.transform.parent = transform;
         if (onlyFloor) return;
         for (int row = (int)bottomLeftV.x; row < (int)bottomRightV.x; row++)
