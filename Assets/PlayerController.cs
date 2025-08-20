@@ -40,8 +40,10 @@ public class PlayerController : MonoBehaviour
 
     public void OnZoom(InputAction.CallbackContext context)
     {
-
         float scrollValue = context.ReadValue<Vector2>().y;
+
+        if(CheckForCeiling(scrollValue)) return;
+
         CM_PositionComposer.CameraDistance -= scrollValue;
         CM_PositionComposer.CameraDistance = Mathf.Clamp(CM_PositionComposer.CameraDistance, MinCameraDistance,  MaxCameraDistance);
 
@@ -81,6 +83,20 @@ public class PlayerController : MonoBehaviour
             Destroy(pointerRef);
             pointerRef = null;
         }
+    }
+
+    private bool CheckForCeiling(float scrollValue)
+    {
+
+        Vector3 startPos = MainCamera.transform.position;
+        Vector3 direction = Vector3.up;
+        float range = 1;
+
+        if (Physics.Raycast(startPos, direction, range, GroundLayer) && scrollValue < 0)
+        {
+            return true;
+        }
+        else return false;
     }
 }
 

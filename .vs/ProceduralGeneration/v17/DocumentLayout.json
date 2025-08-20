@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "D:\\Repos\\ProceduralGeneration\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|D:\\Repos\\ProceduralGeneration\\assets\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|solutionrelative:assets\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|d:\\repos\\proceduralgeneration\\assets\\scripts\\bsp-generation\\dungeoncreator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\bsp-generation\\dungeoncreator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|D:\\Repos\\ProceduralGeneration\\assets\\scripts\\bsp-generation\\roomnode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\bsp-generation\\roomnode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|d:\\repos\\proceduralgeneration\\assets\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|solutionrelative:assets\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|D:\\Repos\\ProceduralGeneration\\assets\\scripts\\globalenums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -30,37 +30,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "DungeonCreator.cs",
               "DocumentMoniker": "D:\\Repos\\ProceduralGeneration\\Assets\\Scripts\\BSP-Generation\\DungeonCreator.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\BSP-Generation\\DungeonCreator.cs",
               "ToolTip": "D:\\Repos\\ProceduralGeneration\\Assets\\Scripts\\BSP-Generation\\DungeonCreator.cs",
               "RelativeToolTip": "Assets\\Scripts\\BSP-Generation\\DungeonCreator.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAAwDUAAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAMwAAAAAAAAAAAAowDUAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-20T15:08:24.902Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "PlayerController.cs",
               "DocumentMoniker": "D:\\Repos\\ProceduralGeneration\\Assets\\PlayerController.cs",
               "RelativeDocumentMoniker": "Assets\\PlayerController.cs",
               "ToolTip": "D:\\Repos\\ProceduralGeneration\\Assets\\PlayerController.cs",
               "RelativeToolTip": "Assets\\PlayerController.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAYwDYAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAADEAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-20T10:36:07.746Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "RoomNode.cs",
               "DocumentMoniker": "D:\\Repos\\ProceduralGeneration\\Assets\\Scripts\\BSP-Generation\\RoomNode.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\BSP-Generation\\RoomNode.cs",
@@ -68,8 +68,7 @@
               "RelativeToolTip": "Assets\\Scripts\\BSP-Generation\\RoomNode.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-18T16:29:41.394Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-18T16:29:41.394Z"
             },
             {
               "$type": "Document",
@@ -92,8 +91,7 @@
               "RelativeToolTip": "Assets\\Scripts\\GlobalEnums.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-17T17:16:46.507Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-17T17:16:46.507Z"
             }
           ]
         }
