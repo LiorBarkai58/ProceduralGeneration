@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 public class RoomNode : Node
 {
@@ -8,9 +9,12 @@ public class RoomNode : Node
         this.BottomRightAreaCorner = new Vector2Int(topRightAreaCorner.x, bottomLeftAreaCorner.y);
         this.TopLeftAreaCorner = new Vector2Int(bottomLeftAreaCorner.x, TopRightAreaCorner.y);
         this.TreeLayerIndex = index;
+        corridors = new List<CorridorNode>();
     }
 
     public RoomType RoomType { get; set; } = RoomType.Normal;
     public int Width { get => (int)(TopRightAreaCorner.x - BottomLeftAreaCorner.x); }
     public int Length { get => (int)(TopRightAreaCorner.y - BottomLeftAreaCorner.y); }
+
+    public List<CorridorNode> corridors;
 }
