@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField,Range(3,100)] private float MaxCameraDistance;
     [Header("Navigation")]
     [SerializeField] private float MovementSpeed = 3;
+    [SerializeField] private float InteractionRange = 5;
     [SerializeField] private LayerMask GroundLayer;
 
     [SerializeField] private LayerMask InteractableLayer;
@@ -90,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 worldPosition = hitInfo.point;
 
-                    if (Vector3.Distance(transform.position, worldPosition) < 10 && hitInfo.collider.TryGetComponent(out IInteractable interactable))
+                    if (Vector3.Distance(transform.position, worldPosition) < InteractionRange && hitInfo.collider.TryGetComponent(out IInteractable interactable))
                     {
                         hitInfo.collider.gameObject.transform.position = new Vector3(9999, 9999, 9999);
                         interactable.OnInteract(gameObject);

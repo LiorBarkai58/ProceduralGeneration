@@ -3,7 +3,11 @@
   "WorkspaceRootPath": "D:\\Repos\\ProceduralGeneration\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|D:\\Repos\\ProceduralGeneration\\assets\\scripts\\globalenums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|D:\\Repos\\ProceduralGeneration\\assets\\scripts\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|d:\\repos\\proceduralgeneration\\assets\\scripts\\globalenums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\globalenums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -15,16 +19,12 @@
       "RelativeMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\items\\interactablebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|d:\\repos\\proceduralgeneration\\assets\\scripts\\bsp-generation\\dungeoncreator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|D:\\Repos\\ProceduralGeneration\\assets\\scripts\\bsp-generation\\dungeoncreator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\bsp-generation\\dungeoncreator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|d:\\repos\\proceduralgeneration\\assets\\scripts\\items\\itembase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|D:\\Repos\\ProceduralGeneration\\assets\\scripts\\items\\itembase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\items\\itembase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|d:\\repos\\proceduralgeneration\\assets\\scripts\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2B33C5A4-0A62-34DC-BB63-15B7AC1B516C}|Assembly-CSharp.csproj|D:\\Repos\\ProceduralGeneration\\assets\\scripts\\items\\inventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -38,11 +38,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "DungeonCreator.cs",
               "DocumentMoniker": "D:\\Repos\\ProceduralGeneration\\Assets\\Scripts\\BSP-Generation\\DungeonCreator.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\BSP-Generation\\DungeonCreator.cs",
@@ -50,25 +50,24 @@
               "RelativeToolTip": "Assets\\Scripts\\BSP-Generation\\DungeonCreator.cs",
               "ViewState": "AgIAAIwAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-21T12:22:54.558Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-21T12:22:54.558Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "PlayerController.cs",
               "DocumentMoniker": "D:\\Repos\\ProceduralGeneration\\Assets\\Scripts\\PlayerController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerController.cs",
               "ToolTip": "D:\\Repos\\ProceduralGeneration\\Assets\\Scripts\\PlayerController.cs",
               "RelativeToolTip": "Assets\\Scripts\\PlayerController.cs",
-              "ViewState": "AgIAADoAAAAAAAAAAAAswF4AAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAkwF0AAABeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-21T11:38:11.851Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "ItemBase.cs",
               "DocumentMoniker": "D:\\Repos\\ProceduralGeneration\\Assets\\Scripts\\Items\\ItemBase.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Items\\ItemBase.cs",
@@ -76,8 +75,7 @@
               "RelativeToolTip": "Assets\\Scripts\\Items\\ItemBase.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-20T16:10:36.032Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-20T16:10:36.032Z"
             },
             {
               "$type": "Document",
@@ -89,12 +87,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Items\\Inventory.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-20T16:16:38.648Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-20T16:16:38.648Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "InteractableBase.cs",
               "DocumentMoniker": "D:\\Repos\\ProceduralGeneration\\Assets\\Scripts\\Items\\InteractableBase.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Items\\InteractableBase.cs",
@@ -102,12 +99,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Items\\InteractableBase.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-20T16:08:05.291Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-20T16:08:05.291Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "IInteractable.cs",
               "DocumentMoniker": "D:\\Repos\\ProceduralGeneration\\Assets\\Scripts\\Interfaces\\IInteractable.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Interfaces\\IInteractable.cs",
@@ -115,12 +111,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Interfaces\\IInteractable.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-20T16:06:51.887Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-20T16:06:51.887Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "GlobalEnums.cs",
               "DocumentMoniker": "D:\\Repos\\ProceduralGeneration\\Assets\\Scripts\\GlobalEnums.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\GlobalEnums.cs",
