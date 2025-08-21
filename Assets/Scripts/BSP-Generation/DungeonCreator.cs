@@ -39,6 +39,8 @@ public class DungeonCreator : MonoBehaviour
 
     [Header("Positions")] [SerializeField] private Vector3 startPosition;
     [SerializeField] private GameObject portalPrefab;
+    [SerializeField] private ConfigurableWall doorPrefab;
+    [SerializeField] private ItemBase key;
     public ConfigurableWall wallVertical, wallHorizontal;
     
     List<Vector3Int> possibleDoorVerticalPosition;
@@ -95,9 +97,9 @@ public class DungeonCreator : MonoBehaviour
 
             foreach (Node room in listOfRooms)
             {
-                Vector2Int currentRoomMiddle =
+                Vector2 currentRoomMiddle =
                               (room.BottomLeftAreaCorner + room.TopRightAreaCorner) / 2;
-
+                
                 if (room is RoomNode roomNode)
                 {
                     switch (roomNode.RoomType)
@@ -106,7 +108,14 @@ public class DungeonCreator : MonoBehaviour
                         case (RoomType.Type1):
                             // insert spawning logic similar to 
                             
-                            Instantiate(specialRoomObjectType1, new Vector3(currentRoomMiddle.x, WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
+                            if (roomNode.corridors.Count > 0)
+                            {
+                                print("Creating at corridor");
+                                Vector2 exitCorridorMiddle = (roomNode.corridors[^1].BottomLeftAreaCorner + roomNode.corridors[^1].TopRightAreaCorner) / 2;
+                                Instantiate(doorPrefab, new Vector3(exitCorridorMiddle.x, WallHeight * i, exitCorridorMiddle.y), Quaternion.identity, transform).ConfigureHeight(WallHeight);
+                                Instantiate(key, new Vector3(currentRoomMiddle.x, WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
+                                
+                            }
                             specialRoomCount++;
                             print("type1");
                             break;

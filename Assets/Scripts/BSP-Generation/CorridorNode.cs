@@ -5,15 +5,17 @@ using UnityEngine;
 
 public class CorridorNode : Node
 {
-    private Node structure1;
-    private Node structure2;
+    private RoomNode structure1;
+    private RoomNode structure2;
     private int corridorWidth;
     private int modifierDistanceFromWall=1;
 
     public CorridorNode(Node node1, Node node2, int corridorWidth) : base(null)
     {
-        this.structure1 = node1;
-        this.structure2 = node2;
+        this.structure1 = node1 as RoomNode;
+        this.structure2 = node2 as RoomNode;
+        structure1?.corridors.Add(this);
+        structure2?.corridors.Add(this);
         this.corridorWidth = corridorWidth;
         GenerateCorridor();
     }
