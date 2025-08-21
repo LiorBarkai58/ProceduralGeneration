@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    public abstract void OnInteract();
+    public abstract void OnInteract(GameObject instigator);
 }
