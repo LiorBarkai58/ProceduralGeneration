@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float MovementSpeed = 3;
     [SerializeField] private LayerMask GroundLayer;
 
+    [SerializeField] private LayerMask InteractableLayer;
+
     private NavMeshAgent agent;
     private GameObject pointerRef;
     private void OnValidate()
@@ -75,7 +77,29 @@ public class PlayerController : MonoBehaviour
         } 
 
     }
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+       
 
+            if (context.performed)
+            {
+                Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, InteractableLayer))
+                {
+
+                Vector3 worldPosition = hitInfo.point;
+
+                    if (Vector3.Distance(transform.position, worldPosition) < 10 && hitInfo.collider.TryGetComponent(out IInteractable interactable))
+                    {
+                        hitInfo.collider.gameObject.transform.position = new Vector3(9999, 9999, 9999);
+                        interactable.OnInteract(gameObject);
+                    }
+                }
+
+            }
+        
+    }
     private void DeletePointer()
     {
         if (pointerRef)

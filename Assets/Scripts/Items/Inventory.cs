@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
@@ -9,6 +8,7 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(ItemBase item)
     {
+        Debug.Log("Added item");
         _itemInventory.Add(item);
         DisplayList = _itemInventory;
     }

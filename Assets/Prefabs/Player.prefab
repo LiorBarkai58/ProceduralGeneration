@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8694245898675691330}
   - component: {fileID: 2046423255486117352}
+  - component: {fileID: 6253377973923997353}
   - component: {fileID: 1455614472761700609}
   - component: {fileID: 2708150649081959707}
   - component: {fileID: 2400062191365536880}
@@ -57,6 +58,22 @@ MonoBehaviour:
   GroundLayer:
     serializedVersion: 2
     m_Bits: 8
+  InteractableLayer:
+    serializedVersion: 2
+    m_Bits: 128
+--- !u!114 &6253377973923997353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2419985580939050894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8de7810bd6bc44c40a009c8cad3049bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DisplayList: []
 --- !u!195 &1455614472761700609
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -180,6 +197,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 129ea549-4a57-4857-81a9-3d905994083d
     m_ActionName: 'Player/Go[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2046423255486117352}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnInteract
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d807ebb9-ede4-47f9-98ea-bebe92f57567
+    m_ActionName: 'Player/Interact[/Keyboard/e]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

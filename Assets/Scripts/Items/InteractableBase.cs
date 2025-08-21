@@ -2,11 +2,15 @@ using UnityEngine;
 
 public abstract class InteractableBase : MonoBehaviour, IInteractable
 {
-    protected abstract void InteractionImplementation();
+    [Header("Item Requirments")]
+    public bool RequiresItem;
+    public ItemType ItemType;
+    public int ItemID;
+    protected abstract void InteractionImplementation(GameObject instigator);
 
-    public void OnInteract()
+    public void OnInteract(GameObject instigator)
     {
-        InteractionImplementation();
+        InteractionImplementation(instigator);
     }
 
 }
