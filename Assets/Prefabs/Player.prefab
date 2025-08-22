@@ -55,6 +55,7 @@ MonoBehaviour:
   MinCameraDistance: 3
   MaxCameraDistance: 3.4
   MovementSpeed: 3
+  InteractionRange: 5
   GroundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -73,7 +74,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8de7810bd6bc44c40a009c8cad3049bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DisplayList: []
+  DisplayList:
+  - {fileID: 2636497440676278467, guid: fb0280ed49a0b3449a9be41c311d83ba, type: 3}
 --- !u!195 &1455614472761700609
 NavMeshAgent:
   m_ObjectHideFlags: 0
