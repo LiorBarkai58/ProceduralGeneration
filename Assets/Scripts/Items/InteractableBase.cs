@@ -2,8 +2,7 @@ using UnityEngine;
 
 public abstract class InteractableBase : MonoBehaviour, IInteractable
 {
-    [Header("Item Requirments")]
-    public bool RequiresItem;
+    [Tooltip("If you have item requirements specify them here") , Header("Item Requirements")]
     public ItemType ItemType;
     public int ItemID;
     protected abstract void InteractionImplementation(GameObject instigator);
