@@ -21,7 +21,7 @@ public class DungeonCreator : MonoBehaviour
     [Range(0, 2)]
     public int roomOffset;
 
-    [Range(1, 8)] public float WallHeight = 2;
+    [Range(1, 30)] public float WallHeight = 2;
 
     [Range(1, 3)]
     [SerializeField] private int floorCount = 1;
@@ -38,7 +38,7 @@ public class DungeonCreator : MonoBehaviour
     [SerializeField] private List<RoomDefinition> specialDefinitions;
 
     [Header("Positions")] [SerializeField] private Vector3 startPosition;
-    [SerializeField] private GameObject portalPrefab;
+    [SerializeField] private Portal portalPrefab;
     [SerializeField] private ConfigurableWall doorPrefab;
     [SerializeField] private ItemBase key;
     public ConfigurableWall wallVertical, wallHorizontal;
@@ -121,12 +121,12 @@ public class DungeonCreator : MonoBehaviour
                             break;
                         case (RoomType.Type2):
                         
-                            Instantiate(specialRoomObjectType2, new Vector3(currentRoomMiddle.x,WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
+                            Instantiate(specialRoomObjectType2, new Vector3(currentRoomMiddle.x,WallHeight * i , currentRoomMiddle.y), Quaternion.identity, transform);
                             specialRoomCount++;
                             print("type2");
                             break;
                         case (RoomType.Type3):
-                            Instantiate(specialRoomObjectType3, new Vector3(currentRoomMiddle.x, WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
+                            Instantiate(specialRoomObjectType3, new Vector3(currentRoomMiddle.x, WallHeight * i, currentRoomMiddle.y), Quaternion.identity, transform);
                             specialRoomCount++;
                             print("type3");
                             break;
@@ -139,7 +139,8 @@ public class DungeonCreator : MonoBehaviour
             }
             Vector2Int xzPosition =
                 (furthestRoom.BottomLeftAreaCorner + furthestRoom.TopRightAreaCorner) / 2;
-            Instantiate(portalPrefab, new Vector3(xzPosition.x,  WallHeight * i, xzPosition.y), Quaternion.identity, transform);
+            Portal current = Instantiate(portalPrefab, new Vector3(xzPosition.x- 7,  WallHeight * (i), xzPosition.y- 7), Quaternion.identity, transform);
+            current.TargetPosition = new Vector3(startPosition.x, WallHeight * (i + 1), startPosition.z);
             CreateMesh(Vector2.zero, new Vector2(dungeonWidth, dungeonLength), i, true);
             CreateWalls(wallParent);    
         }
