@@ -60,6 +60,11 @@ public class WFCNodeOption : ScriptableObject
         else return _LegalNeighborsNegativeX;
 
     }
+
+    internal GameObject GetPrefab()
+    {
+        return AttachedPrefab;
+    }
 }
 
 public enum NeighborDirection { UP = -1, DOWN = -2, POSITIVEZ = 0, POSITIVEX = 1, NEGATIVEZ = 2, NEGATIVEX = 3 }

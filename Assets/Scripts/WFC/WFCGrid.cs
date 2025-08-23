@@ -17,9 +17,9 @@ public class WFCGrid : MonoBehaviour
     [SerializeField] private WFCNode[] _grid = new WFCNode[0];
 
     [SerializeField] private WFCNode _nodeObject;
-
     [SerializeField] private List<WFCNodeOption> _DefaultDomain;
-
+    [SerializeField] private WFCNodeOption _BoundaryOption;
+    public WFCNodeOption GetBoundaryOption() => _BoundaryOption;
     public List<WFCNodeOption> GetDeafultDomain() => _DefaultDomain;
 
     [ContextMenu("Update Grid Dimensions")]
@@ -56,7 +56,7 @@ public class WFCGrid : MonoBehaviour
 
     public int ToIndex(int x, int y, int z)
     {
-        return x + y * DimX + z * DimX * DimY;
+        return x + y * CachedDimensions.x + z * CachedDimensions.x * CachedDimensions.y;
     }
 
     public int ToIndex(Vector3Int Coords) => ToIndex(Coords.x, Coords.y, Coords.z);
@@ -66,6 +66,15 @@ public class WFCGrid : MonoBehaviour
         return coords.x >= 0 && coords.y >= 0 && coords.z >= 0 && 
             coords.x < DimX && coords.y < DimY && coords.z < DimZ;
 
+    }
+    public Vector3Int GetNodeCoords(WFCNode node)
+    {
+        return FromIndexCached(ArrayUtility.IndexOf(_grid, node));
+    }
+
+    public WFCNode GetNodeAt(Vector3Int coords)
+    {
+        return _grid[ToIndex(coords)];
     }
 
     public Vector3Int FromIndexCached(int index)
@@ -78,7 +87,7 @@ public class WFCGrid : MonoBehaviour
         return new Vector3Int(x, y, z);
     }
 
-    public Vector3Int FromIndex(int index)
+    private Vector3Int FromIndex(int index)
     {
         int xy = DimX * DimY;
         int z = index / xy;
@@ -95,7 +104,7 @@ public class WFCGrid : MonoBehaviour
 #if UNITY_EDITOR
         node = (WFCNode)PrefabUtility.InstantiatePrefab(_nodeObject, transform);
 #else
-                node = Instantiate(_nodeObject, transform);
+        node = Instantiate(_nodeObject, transform);
 #endif
         node.transform.localPosition = transform.localPosition + FromIndex(index);
         node.InitializeNode(this);
@@ -118,5 +127,7 @@ public class WFCGrid : MonoBehaviour
         CachedDimensions = Vector3Int.zero;
         _grid = new WFCNode[0];
     }
+
+    
 
 }
