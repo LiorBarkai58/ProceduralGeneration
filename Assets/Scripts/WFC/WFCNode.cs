@@ -144,6 +144,7 @@ public class WFCNode : MonoBehaviour
             _domain = survivors;     // empty
             CachedEntropy = 0f;
             contradiction = true;
+            Instantiate(ParentGrid.ErrorObject,transform);
             if (debug) Debug.LogError("[WFC] CONTRADICTION: domain emptied at " + ParentGrid.GetNodeCoords(this));
             return changedDomain;
         }
@@ -449,27 +450,39 @@ public float GetCachedEntropy()
 
     #endregion
 
-    #region WFC Additions (Seeding, Safe Resets, Constraint-Driven Pruning)
 
-    // --- Seed lock ---
+    #region WFC Seeding (lockable collapse + safe resets)
+
     [SerializeField] private bool _isSeedLocked = false;
     public bool IsSeedLocked => _isSeedLocked;
 
-    public bool SeedCollapse(WFCNodeOption option, int rot)
+    [SerializeField] private WFCNodeOption _seedOption;
+    [SerializeField] private int _seedRotation = 0;
+
+    [ContextMenu("Seed")]
+    public void InspectorSeed()
+    {
+        if (!_seedOption) return;
+        SeedCollapse(_seedOption, _seedRotation % 4);
+    }
+
+    /// Manually collapse this node into a specific option+rotation and lock it.
+    /// Returns false if option is null.
+    public bool SeedCollapse(WFCNodeOption option, int rot = 0)
     {
         if (option == null) return false;
 
-        // Commit collapse
+        // commit collapse
         _isCollapsed = true;
         CollapsedSO = option;
-        WFCOptionRotations = rot;
+        WFCOptionRotations = ((rot % 4) + 4) % 4;
         _isSeedLocked = true;
 
-        // Reflect in domain & entropy
-        _domain = new List<WFCNodeOption>(1) { option };
+        // reflect in domain/entropy
+        _domain = new System.Collections.Generic.List<WFCNodeOption>(1) { option };
         CachedEntropy = 0f;
 
-        // Refresh instance
+        // refresh instance (optional)
         if (CollapsedObject != null)
         {
 #if UNITY_EDITOR
@@ -479,14 +492,16 @@ public float GetCachedEntropy()
 #endif
             CollapsedObject = null;
         }
-
-        var p = option.GetPrefab();  
-        if (p != null)
-            CollapsedObject = Instantiate(p, transform.position, Quaternion.Euler(0, 90 * rot, 0), transform);
+        // If your option exposes a prefab, instantiate it
+        // (replace GetPrefab() with your accessor or comment these two lines out)
+        var prefab = option.GetPrefab();
+        if (prefab != null)
+            CollapsedObject = Instantiate(prefab, transform.position, Quaternion.Euler(0, 90 * WFCOptionRotations, 0), transform);
 
         return true;
     }
 
+    /// Clear placement only if not a seed (prevents chunk/resets from nuking seeds)
     public void ClearCollapseIfNotLocked()
     {
         if (_isSeedLocked) return;
@@ -505,12 +520,17 @@ public float GetCachedEntropy()
         }
     }
 
-    
+    /// Reset domain only if not a seed
     public void ResetDomainIfNotLocked()
     {
         if (_isSeedLocked) return;
-        ResetDomain();               
-        GetEntropy();                
+        ResetDomain();
+        GetEntropy();
     }
+
+    /// Optional: unlock this node so future resets can clear it
+    public void UnlockSeed() => _isSeedLocked = false;
+
     #endregion
+
 }

@@ -19,6 +19,7 @@ public class WFCGrid : MonoBehaviour
     [SerializeField] private WFCNode _nodeObject;
     [SerializeField] private List<WFCNodeOption> _DefaultDomain;
     [SerializeField] private WFCNodeOption _BoundaryOption;
+    [SerializeField] public GameObject ErrorObject;
     public WFCNodeOption GetBoundaryOption() => _BoundaryOption;
     public List<WFCNodeOption> GetDeafultDomain() => new(_DefaultDomain);
 
@@ -237,7 +238,8 @@ public class WFCGrid : MonoBehaviour
         {
             var n = _grid[i];
             if (n == null) continue;
-            if (n.GetDomain() == null || n.GetDomain().Count == 0)
+            if (n.IsSeedLocked) PropagateFrom(i, false, false);
+            else if (n.GetDomain() == null || n.GetDomain().Count == 0)
                 n.ResetDomain();
         }
     }
@@ -260,6 +262,7 @@ public class WFCGrid : MonoBehaviour
     public SolveV1Result SolveV1_GreedyPropagate(int maxSteps = 1_000_000)
     {
         EnsureGridInitializedForSolve();
+
 
         // prime entropies
         for (int i = 0; i < _grid.Length; i++)
@@ -343,6 +346,51 @@ public class WFCGrid : MonoBehaviour
             }
         }
 
+        return true;
+    }
+
+    #endregion
+
+    #region WFC Seeding API
+
+    // Generic seeding
+
+    public bool SeedAt(UnityEngine.Vector3Int coords, WFCNodeOption option, int rot = 0, bool debug = false)
+    {
+        if (!IsWhithinBounds(coords) || option == null) return false;
+
+        var n = GetNodeAt(coords);
+        if (!n.SeedCollapse(option, rot)) return false;
+
+        // Propagate constraints from this seed so neighbors prune immediately
+        // (uses your existing propagation; strict=false is authoring-friendly)
+        if (!PropagateFrom(ToIndex(coords), debug: debug, strictMutualForUncollapsed: false))
+        {
+            if (debug) UnityEngine.Debug.LogError($"[WFC] Contradiction after seeding {option.name} at {coords}.");
+            return false;
+        }
+        return true;
+    }
+
+    // Optional struct & list to predefine seeds in the inspector
+    [System.Serializable]
+    public struct SeedPlacement
+    {
+        public string label;
+        public WFCNodeOption option;
+        public UnityEngine.Vector3Int coords;
+        public int rot;
+    }
+    [SerializeField] private System.Collections.Generic.List<SeedPlacement> _Seeds = new System.Collections.Generic.List<SeedPlacement>();
+
+    /// Apply all serialized seeds (safe to call multiple times; already-seeded nodes are locked)
+    public bool ApplySeeds(bool debug = false)
+    {
+        foreach (var s in _Seeds)
+        {
+            if (!SeedAt(s.coords, s.option, s.rot, debug))
+                return false; // early out on contradiction
+        }
         return true;
     }
 

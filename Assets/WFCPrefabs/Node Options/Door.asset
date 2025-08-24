@@ -10,35 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 575707c2e2c4b7046983b5f6fd4128ff, type: 3}
-  m_Name: Column
+  m_Name: Door
   m_EditorClassIdentifier: 
-  Name: Column
+  Name: Door
   WFCWeight: 1
-  AttachedPrefab: {fileID: 8396059688362942506, guid: d85a451327a973b4a8199af41031c0f0, type: 3}
+  AttachedPrefab: {fileID: 6091353980295587637, guid: 730f9515c76972c49b8140c45979f16d, type: 3}
   _LegalNeighborsUP:
   - {fileID: 11400000, guid: 43018f0571e772a428be7a9ec270f2c5, type: 2}
-  - {fileID: 11400000}
+  - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
   - {fileID: 11400000, guid: 0116b649cb02c4f4d9615f719071c9bc, type: 2}
   _LegalNeighborsDOWN:
-  - {fileID: 11400000}
   - {fileID: 11400000, guid: 8d16c5004d5710d438674cdb920a76a9, type: 2}
   _LegalNeighborsPositiveX:
   - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
-  - {fileID: 11400000, guid: 43018f0571e772a428be7a9ec270f2c5, type: 2}
+  - {fileID: 11400000, guid: 09f7eeb8fa7395747914d4e14475c55b, type: 2}
   - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
-  - {fileID: 11400000}
   _LegalNeighborsNegativeX:
   - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
-  - {fileID: 11400000, guid: 43018f0571e772a428be7a9ec270f2c5, type: 2}
+  - {fileID: 11400000, guid: 09f7eeb8fa7395747914d4e14475c55b, type: 2}
   - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
-  - {fileID: 11400000}
   _LegalNeighborsNegativeZ:
-  - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
   - {fileID: 11400000, guid: 43018f0571e772a428be7a9ec270f2c5, type: 2}
-  - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
-  - {fileID: 11400000}
   _LegalNeighborsPositiveZ:
-  - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
-  - {fileID: 11400000, guid: 43018f0571e772a428be7a9ec270f2c5, type: 2}
-  - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
-  - {fileID: 11400000}
+  - {fileID: 11400000, guid: 0116b649cb02c4f4d9615f719071c9bc, type: 2}

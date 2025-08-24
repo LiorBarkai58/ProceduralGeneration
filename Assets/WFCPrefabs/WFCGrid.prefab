@@ -44,9 +44,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562b0641f5fc303459673d8fbec7b101, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DimX: 1
-  DimY: 1
-  DimZ: 1
-  _grid:
-  - {fileID: 0}
+  DimX: 0
+  DimY: 0
+  DimZ: 0
+  _grid: []
   _nodeObject: {fileID: 5221889488483199765, guid: 4d8d205c610e353498dd68fb6fe56d45, type: 3}
+  _DefaultDomain:
+  - {fileID: 11400000, guid: 43018f0571e772a428be7a9ec270f2c5, type: 2}
+  - {fileID: 11400000, guid: 1e92d72dae747bf418577f9636a9b55e, type: 2}
+  - {fileID: 11400000, guid: 09f7eeb8fa7395747914d4e14475c55b, type: 2}
+  - {fileID: 11400000, guid: 8d16c5004d5710d438674cdb920a76a9, type: 2}
+  - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
+  - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
+  _BoundaryOption: {fileID: 11400000, guid: 0116b649cb02c4f4d9615f719071c9bc, type: 2}
+  ErrorObject: {fileID: 4068000476491230378, guid: 822ecb308849a994ebe08e9cc48790a1, type: 3}
+  _Seeds: []
