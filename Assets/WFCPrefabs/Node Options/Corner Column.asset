@@ -26,23 +26,19 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
   - {fileID: 11400000, guid: 0116b649cb02c4f4d9615f719071c9bc, type: 2}
   - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
-  - {fileID: 11400000}
   - {fileID: 11400000, guid: fe15e509c136f0c4f8ae10d59f546cec, type: 2}
   _LegalNeighborsNegativeX:
   - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
   - {fileID: 11400000, guid: 0116b649cb02c4f4d9615f719071c9bc, type: 2}
   - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
-  - {fileID: 11400000}
   - {fileID: 11400000, guid: fe15e509c136f0c4f8ae10d59f546cec, type: 2}
   _LegalNeighborsNegativeZ:
   - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
   - {fileID: 11400000, guid: 0116b649cb02c4f4d9615f719071c9bc, type: 2}
   - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
-  - {fileID: 11400000}
   - {fileID: 11400000, guid: fe15e509c136f0c4f8ae10d59f546cec, type: 2}
   _LegalNeighborsPositiveZ:
   - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
   - {fileID: 11400000, guid: 0116b649cb02c4f4d9615f719071c9bc, type: 2}
   - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
-  - {fileID: 11400000}
   - {fileID: 11400000, guid: fe15e509c136f0c4f8ae10d59f546cec, type: 2}

@@ -8,9 +8,9 @@ using UnityEngine;
 
 public class WFCGrid : MonoBehaviour
 {
-    [SerializeField] private int DimX = 1;
-    [SerializeField] private int DimY = 1;
-    [SerializeField] private int DimZ = 1;
+    [SerializeField] public int DimX = 1;
+    [SerializeField] public int DimY = 1;
+    [SerializeField] public int DimZ = 1;
 
     private Vector3Int CachedDimensions = new Vector3Int(1, 1, 1);
 

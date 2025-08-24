@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4463239323980080044
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 295388400770514816}
+  - component: {fileID: 4836823042874015074}
+  m_Layer: 0
+  m_Name: WFCGridCorridor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &295388400770514816
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4463239323980080044}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4836823042874015074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4463239323980080044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 562b0641f5fc303459673d8fbec7b101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DimX: 0
+  DimY: 0
+  DimZ: 0
+  _grid: []
+  _nodeObject: {fileID: 5221889488483199765, guid: 4d8d205c610e353498dd68fb6fe56d45, type: 3}
+  _DefaultDomain:
+  - {fileID: 11400000, guid: 43018f0571e772a428be7a9ec270f2c5, type: 2}
+  - {fileID: 11400000, guid: 09f7eeb8fa7395747914d4e14475c55b, type: 2}
+  - {fileID: 11400000, guid: 8d16c5004d5710d438674cdb920a76a9, type: 2}
+  - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
+  - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
+  _BoundaryOption: {fileID: 11400000, guid: 0116b649cb02c4f4d9615f719071c9bc, type: 2}
+  ErrorObject: {fileID: 4068000476491230378, guid: 822ecb308849a994ebe08e9cc48790a1, type: 3}
+  _Seeds: []

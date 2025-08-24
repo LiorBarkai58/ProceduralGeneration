@@ -10,6 +10,8 @@ public class CorridorNode : Node
     private int corridorWidth;
     private int modifierDistanceFromWall=1;
 
+    public int Width { get => (int)(TopRightAreaCorner.x - BottomLeftAreaCorner.x); }
+    public int Length { get => (int)(TopRightAreaCorner.y - BottomLeftAreaCorner.y); }
     public CorridorNode(Node node1, Node node2, int corridorWidth) : base(null)
     {
         this.structure1 = node1 as RoomNode;

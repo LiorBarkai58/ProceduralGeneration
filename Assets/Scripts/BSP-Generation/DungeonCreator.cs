@@ -42,7 +42,8 @@ public class DungeonCreator : MonoBehaviour
     [SerializeField] private ConfigurableWall doorPrefab;
     [SerializeField] private ItemBase key;
     public ConfigurableWall wallVertical, wallHorizontal;
-    
+
+    [SerializeField] private WFCGrid grid;
     List<Vector3Int> possibleDoorVerticalPosition;
     List<Vector3Int> possibleDoorHorizontalPosition;
     List<Vector3Int> possibleWallHorizontalPosition;
@@ -89,8 +90,13 @@ public class DungeonCreator : MonoBehaviour
                     maxDistance = Vector2Int.Distance(new Vector2Int(0, 0), listOfRooms[j].BottomLeftAreaCorner);
                     furthestRoom = listOfRooms[j];
                 }
+
+                if (listOfRooms[j] is CorridorNode)
+                {
+                    CreateMesh(listOfRooms[j].BottomLeftAreaCorner, listOfRooms[j].TopRightAreaCorner, i);
+                }
+                else CreateMesh(listOfRooms[j].BottomLeftAreaCorner, listOfRooms[j].TopRightAreaCorner, i, true);
                 
-                CreateMesh(listOfRooms[j].BottomLeftAreaCorner, listOfRooms[j].TopRightAreaCorner, i);
             }
 
             int specialRoomCount = 0;
@@ -102,6 +108,19 @@ public class DungeonCreator : MonoBehaviour
                 
                 if (room is RoomNode roomNode)
                 {
+                    WFCGrid roomGrid = Instantiate(grid,
+                        new Vector3(room.BottomLeftAreaCorner.x + 0.5f, WallHeight * i, room.BottomLeftAreaCorner.y + 0.5f),
+                        Quaternion.identity, transform);
+                    roomGrid.DimX = roomNode.Width;
+                    roomGrid.DimZ = roomNode.Length;
+                    roomGrid.DimY = (int)WallHeight;
+                    for (int k = 0; k < 5; k++)
+                    {
+                        if (roomGrid.SolveV1_GreedyPropagate() == WFCGrid.SolveV1Result.Done)
+                        {
+                            break;
+                        }
+                    }                    
                     switch (roomNode.RoomType)
                     {
                         
