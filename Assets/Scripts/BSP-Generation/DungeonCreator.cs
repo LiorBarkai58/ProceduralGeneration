@@ -22,6 +22,8 @@ public class DungeonCreator : MonoBehaviour
     public int roomOffset;
 
     [Range(1, 30)] public float WallHeight = 2;
+    [Range(1, 30)] public int FloorHeight = 2;
+
 
     [Range(1, 3)]
     [SerializeField] private int floorCount = 1;
@@ -74,7 +76,7 @@ public class DungeonCreator : MonoBehaviour
     public void CreateDungeon()
     {
         DestroyAllChildren();
-        for (int i = 0; i < floorCount; i++)
+        for (int i = 0; i < floorCount* FloorHeight; i += FloorHeight)
         {
             DugeonGenerator generator = new DugeonGenerator(dungeonWidth, dungeonLength);
             var listOfRooms = generator.CalculateDungeon(maxIterations,
@@ -129,14 +131,15 @@ public class DungeonCreator : MonoBehaviour
                     roomGrid.DimZ = roomNode.Length;
                     roomGrid.DimY = (int)WallHeight;
                     roomGrid.UpdateGrid();
-                    roomGrid.GetNodeAt(new Vector3Int(0, 1, 1)).SeedCollapse(DoorOption, 3);
-                    for (int k = 0; k < 5; k++)
+                    roomNode.grid = roomGrid;
+                    //CollapseDoors(roomNode, roomGrid);
+                    /*for (int k = 0; k < 5; k++)
                     {
                         if (roomGrid.SolveV1_GreedyPropagate() == WFCGrid.SolveV1Result.Done)
                         {
                             break;
                         }
-                    }       
+                    } */      
                     
                     switch (roomNode.RoomType)
                     {
@@ -173,7 +176,31 @@ public class DungeonCreator : MonoBehaviour
                     }
                 }
             }
-            Vector2Int xzPosition =
+            foreach (Node room in listOfRooms)
+            {
+                if (room is CorridorNode corridor)
+                {
+                    CollapseDoor(corridor.structure1, corridor);
+                    CollapseDoor(corridor.structure2, corridor);
+                }
+            }
+
+            foreach (Node room in listOfRooms)
+            {
+                if (room is RoomNode roomNode)
+                {
+                    for (int k = 0; k < 5; k++)
+                    {
+                        if (roomNode.grid.SolveV1_GreedyPropagate() == WFCGrid.SolveV1Result.Done)
+                        {
+                            break;
+                        }
+                    } 
+                }
+            }
+
+
+                Vector2Int xzPosition =
                 (furthestRoom.BottomLeftAreaCorner + furthestRoom.TopRightAreaCorner) / 2;
             Portal current = Instantiate(portalPrefab, new Vector3(xzPosition.x- 7,  WallHeight * (i), xzPosition.y- 7), Quaternion.identity, transform);
             current.TargetPosition = new Vector3(startPosition.x, WallHeight * (i + 1), startPosition.z);
@@ -181,6 +208,98 @@ public class DungeonCreator : MonoBehaviour
             CreateWalls(wallParent);    
         }
         NMSurface.BuildNavMesh();
+    }
+
+
+    private void CollapseDoor(RoomNode roomNode, CorridorNode corridor)
+    {
+        if (roomNode == null) { Debug.Log("Room was Null"); return; }
+        else if (roomNode.grid == null) { Debug.Log("Grid was Null"); return; }
+        int DoorXCoord; int DoorZCoord; int rotation;
+        if (corridor.horizontal)
+        {
+            DoorXCoord = 0;
+            DoorZCoord = roomNode.grid.DimZ / 2;
+            rotation = 3;
+            if (roomNode.BottomLeftAreaCorner.x < corridor.BottomLeftAreaCorner.x)
+            {
+                DoorXCoord = roomNode.grid.DimX - 1;
+                rotation = 1;
+            }
+            else
+            {
+                DoorXCoord = 0;
+                rotation = 3;
+            }
+            //DoorZCoord = roomNode.BottomLeftAreaCorner.y - corridor.BottomLeftAreaCorner.y;
+        }
+        else
+        {
+            DoorXCoord = roomNode.grid.DimX / 2;
+            DoorZCoord = 0;
+            rotation = 2;
+            if (roomNode.BottomLeftAreaCorner.y < corridor.BottomLeftAreaCorner.y)
+            {
+                DoorZCoord = roomNode.grid.DimZ - 1;
+                rotation = 0;
+            }
+            else
+            {
+                DoorZCoord = 0;
+                rotation = 2;
+            }
+            //DoorXCoord = roomNode.BottomLeftAreaCorner.x - corridor.BottomLeftAreaCorner.x;
+        }
+
+        roomNode.grid.GetNodeAt(new(DoorXCoord, 1, DoorZCoord)).SeedCollapse(DoorOption, rotation);
+
+
+    }
+
+    private void CollapseDoors(RoomNode roomNode, WFCGrid roomGrid)
+    {
+        int DoorXCoord; int DoorZCoord; int rotation;
+
+        foreach (CorridorNode corridor in roomNode.corridors)
+        {
+            if (corridor.horizontal)
+            {
+                DoorXCoord = 0;
+                DoorZCoord = roomGrid.DimZ / 2;
+                rotation = 3;
+                /*if (roomNode.BottomLeftAreaCorner.x < corridor.BottomLeftAreaCorner.x)
+                {
+                    DoorXCoord = roomGrid.DimX - 1;
+                    rotation = 1;
+                }
+                else
+                {
+                    DoorXCoord = 0;
+                    rotation = 3;
+                }
+                DoorZCoord = roomNode.BottomLeftAreaCorner.y - corridor.BottomLeftAreaCorner.y;*/
+            }
+            else
+            {
+                DoorXCoord = roomGrid.DimX / 2;
+                DoorZCoord = 0;
+                rotation = 2;
+                /*if (roomNode.BottomLeftAreaCorner.y < corridor.BottomLeftAreaCorner.y)
+                {
+                    DoorZCoord = roomGrid.DimZ - 1;
+                    rotation = 0;
+                }
+                else
+                {
+                    DoorZCoord = 0;
+                    rotation = 2;
+                }
+                DoorXCoord = roomNode.BottomLeftAreaCorner.x - corridor.BottomLeftAreaCorner.x;*/
+            }
+
+            roomGrid.GetNodeAt(new(DoorXCoord, 1, DoorZCoord)).SeedCollapse(DoorOption,rotation);
+        }
+
     }
 
     private void CreateWalls(GameObject wallParent)

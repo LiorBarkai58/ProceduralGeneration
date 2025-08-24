@@ -132,6 +132,7 @@ public class WFCGrid : MonoBehaviour
 
     public WFCNode GetNodeAt(Vector3Int coords)
     {
+        if (!IsWhithinBounds(coords)) return _grid[ToIndex(new Vector3Int(1, 1, 0))];
         return _grid[ToIndex(coords)];
     }
 

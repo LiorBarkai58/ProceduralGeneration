@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class CorridorNode : Node
 {
-    private RoomNode structure1;
-    private RoomNode structure2;
+    public RoomNode structure1;
+    public RoomNode structure2;
     private int corridorWidth;
     private int modifierDistanceFromWall=1;
 

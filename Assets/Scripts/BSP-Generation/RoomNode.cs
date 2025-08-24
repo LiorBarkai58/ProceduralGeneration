@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class RoomNode : Node
 {
+    public WFCGrid grid;
     public RoomNode(Vector2Int bottomLeftAreaCorner, Vector2Int topRightAreaCorner, Node parentNode, int index) : base(parentNode)
     {
         this.BottomLeftAreaCorner = bottomLeftAreaCorner;
