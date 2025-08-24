@@ -44,6 +44,8 @@ public class DungeonCreator : MonoBehaviour
     public ConfigurableWall wallVertical, wallHorizontal;
 
     [SerializeField] private WFCGrid grid;
+    [SerializeField] private WFCNodeOption DoorOption;
+    [SerializeField] private GameObject errorSphere;
     List<Vector3Int> possibleDoorVerticalPosition;
     List<Vector3Int> possibleDoorHorizontalPosition;
     List<Vector3Int> possibleWallHorizontalPosition;
@@ -55,6 +57,18 @@ public class DungeonCreator : MonoBehaviour
     {
        _groundLayer = LayerMask.NameToLayer("Floor");
         CreateDungeon();
+        
+    }
+
+    [ContextMenu("Subscribe to failed")]
+    public void Subscribe()
+    {
+        CorridorsGenerator.OnCorridorFailed += CreateDebugSphere;
+    }
+    [ContextMenu("UnSubscribe to failed")]
+    public void UnSubscribe()
+    {
+        CorridorsGenerator.OnCorridorFailed -= CreateDebugSphere;
     }
 
     public void CreateDungeon()
@@ -91,9 +105,9 @@ public class DungeonCreator : MonoBehaviour
                     furthestRoom = listOfRooms[j];
                 }
 
-                if (listOfRooms[j] is CorridorNode)
+                if (listOfRooms[j] is CorridorNode corridor)
                 {
-                    CreateMesh(listOfRooms[j].BottomLeftAreaCorner, listOfRooms[j].TopRightAreaCorner, i);
+                    CreateMesh(listOfRooms[j].BottomLeftAreaCorner, listOfRooms[j].TopRightAreaCorner, i, false, corridor.horizontal);
                 }
                 else CreateMesh(listOfRooms[j].BottomLeftAreaCorner, listOfRooms[j].TopRightAreaCorner, i, true);
                 
@@ -114,13 +128,16 @@ public class DungeonCreator : MonoBehaviour
                     roomGrid.DimX = roomNode.Width;
                     roomGrid.DimZ = roomNode.Length;
                     roomGrid.DimY = (int)WallHeight;
+                    roomGrid.UpdateGrid();
+                    roomGrid.GetNodeAt(new Vector3Int(0, 1, 1)).SeedCollapse(DoorOption, 3);
                     for (int k = 0; k < 5; k++)
                     {
                         if (roomGrid.SolveV1_GreedyPropagate() == WFCGrid.SolveV1Result.Done)
                         {
                             break;
                         }
-                    }                    
+                    }       
+                    
                     switch (roomNode.RoomType)
                     {
                         
@@ -186,7 +203,7 @@ public class DungeonCreator : MonoBehaviour
         current.transform.localPosition = new Vector3(current.transform.localPosition.x, 0, current.transform.localPosition.z);
     }
 
-    private void CreateMesh(Vector2 bottomLeftCorner, Vector2 topRightCorner, int floorNumber, bool onlyFloor = false)
+    private void CreateMesh(Vector2 bottomLeftCorner, Vector2 topRightCorner, int floorNumber, bool onlyFloor = false, bool horizontal = false)
     {
         Vector3 bottomLeftV = new Vector3(bottomLeftCorner.x, 0, bottomLeftCorner.y);
         Vector3 bottomRightV = new Vector3(topRightCorner.x, 0, bottomLeftCorner.y);
@@ -236,23 +253,36 @@ public class DungeonCreator : MonoBehaviour
         if (onlyFloor) return;
         for (int row = (int)bottomLeftV.x; row < (int)bottomRightV.x; row++)
         {
-            var wallPosition = new Vector3(row, floorHeight, bottomLeftV.z);
-            AddWallPositionToList(wallPosition, possibleWallHorizontalPosition, possibleDoorHorizontalPosition);
+            if (horizontal || (row == (int)bottomLeftV.x || row == (int)bottomRightV.x) )
+            {
+
+                var wallPosition = new Vector3(row, floorHeight, bottomLeftV.z);
+                AddWallPositionToList(wallPosition, possibleWallHorizontalPosition, possibleDoorHorizontalPosition);
+            }
         }
         for (int row = (int)topLeftV.x; row < (int)topRightCorner.x; row++)
         {
-            var wallPosition = new Vector3(row, floorHeight, topRightV.z);
-            AddWallPositionToList(wallPosition, possibleWallHorizontalPosition, possibleDoorHorizontalPosition);
+            if (horizontal || (row == (int)topLeftV.x || row == (int)topRightCorner.x))
+            {
+                var wallPosition = new Vector3(row, floorHeight, topRightV.z);
+                AddWallPositionToList(wallPosition, possibleWallHorizontalPosition, possibleDoorHorizontalPosition);
+            }
         }
         for (int col = (int)bottomLeftV.z; col < (int)topLeftV.z; col++)
         {
-            var wallPosition = new Vector3(bottomLeftV.x, floorHeight, col);
-            AddWallPositionToList(wallPosition, possibleWallVerticalPosition, possibleDoorVerticalPosition);
+            if (!horizontal || (col == (int)bottomLeftV.z || col == (int)topLeftV.z))
+            {
+                var wallPosition = new Vector3(bottomLeftV.x, floorHeight, col);
+                AddWallPositionToList(wallPosition, possibleWallVerticalPosition, possibleDoorVerticalPosition);
+            }
         }
-        for (int col = (int)bottomRightV.z; col < (int)topRightV.z; col++)
+        for (int col = (int)bottomRightV.z; col <= (int)topRightV.z; col++)
         {
-            var wallPosition = new Vector3(bottomRightV.x, floorHeight, col);
-            AddWallPositionToList(wallPosition, possibleWallVerticalPosition, possibleDoorVerticalPosition);
+            if (!horizontal || (col == (int)bottomRightV.z || col == (int)topRightV.z))
+            {
+                var wallPosition = new Vector3(bottomRightV.x, floorHeight, col);
+                AddWallPositionToList(wallPosition, possibleWallVerticalPosition, possibleDoorVerticalPosition);
+            }
         }
     }
     
@@ -282,7 +312,8 @@ public class DungeonCreator : MonoBehaviour
         }
     }
 
-    private void MakeRoomSpecial(RoomNode room)
+    private void CreateDebugSphere(Vector2Int position)
     {
+        Instantiate(errorSphere, new Vector3(position.x, 0, position.y), Quaternion.identity, transform);
     }
 }

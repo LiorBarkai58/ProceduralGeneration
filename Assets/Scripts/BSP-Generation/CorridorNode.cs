@@ -10,6 +10,7 @@ public class CorridorNode : Node
     private int corridorWidth;
     private int modifierDistanceFromWall=1;
 
+    public bool horizontal = false;
     public int Width { get => (int)(TopRightAreaCorner.x - BottomLeftAreaCorner.x); }
     public int Length { get => (int)(TopRightAreaCorner.y - BottomLeftAreaCorner.y); }
     public CorridorNode(Node node1, Node node2, int corridorWidth) : base(null)
@@ -19,6 +20,7 @@ public class CorridorNode : Node
         structure1?.corridors.Add(this);
         structure2?.corridors.Add(this);
         this.corridorWidth = corridorWidth;
+        horizontal = Mathf.Abs(node1.BottomLeftAreaCorner.x - node2.BottomLeftAreaCorner.x) > Mathf.Abs(node1.BottomLeftAreaCorner.y - node2.BottomLeftAreaCorner.y);
         GenerateCorridor();
     }
 
@@ -42,6 +44,7 @@ public class CorridorNode : Node
             default:
                 break;
         }
+        
     }
 
     private void ProcessRoomInRelationRightOrLeft(Node structure1, Node structure2)
@@ -97,38 +100,28 @@ public class CorridorNode : Node
         TopRightAreaCorner = new Vector2Int(rightStructure.TopLeftAreaCorner.x, y + this.corridorWidth);
     }
 
-    private int GetValidYForNeighourLeftRight(Vector2Int leftNodeUp, Vector2Int leftNodeDown, Vector2Int rightNodeUp, Vector2Int rightNodeDown)
+private int GetValidYForNeighourLeftRight(
+    Vector2Int leftNodeUp, Vector2Int leftNodeDown,
+    Vector2Int rightNodeUp, Vector2Int rightNodeDown)
+{
+    // Determine the overlapping start and end points on the Y-axis
+    int overlapStart = Mathf.Max(leftNodeDown.y, rightNodeDown.y);
+    int overlapEnd = Mathf.Min(leftNodeUp.y, rightNodeUp.y);
+
+    // Calculate overlap height
+    int overlapHeight = overlapEnd - overlapStart;
+
+    // Ensure that the overlap area is tall enough for the corridor
+    if (overlapHeight < this.corridorWidth)
     {
-        if(rightNodeUp.y >= leftNodeUp.y && leftNodeDown.y >= rightNodeDown.y)
-        {
-            return StructureHelper.CalculateMiddlePoint(
-                leftNodeDown + new Vector2Int(0, modifierDistanceFromWall),
-                leftNodeUp - new Vector2Int(0, modifierDistanceFromWall + this.corridorWidth)
-                ).y;
-        }
-        if(rightNodeUp.y <= leftNodeUp.y && leftNodeDown.y <= rightNodeDown.y)
-        {
-            return StructureHelper.CalculateMiddlePoint(
-                rightNodeDown+new Vector2Int(0,modifierDistanceFromWall),
-                rightNodeUp - new Vector2Int(0, modifierDistanceFromWall+this.corridorWidth)
-                ).y;
-        }
-        if(leftNodeUp.y >= rightNodeDown.y && leftNodeUp.y <= rightNodeUp.y)
-        {
-            return StructureHelper.CalculateMiddlePoint(
-                rightNodeDown+new Vector2Int(0,modifierDistanceFromWall),
-                leftNodeUp-new Vector2Int(0,modifierDistanceFromWall)
-                ).y;
-        }
-        if(leftNodeDown.y >= rightNodeDown.y && leftNodeDown.y <= rightNodeUp.y)
-        {
-            return StructureHelper.CalculateMiddlePoint(
-                leftNodeDown+new Vector2Int(0,modifierDistanceFromWall),
-                rightNodeUp-new Vector2Int(0,modifierDistanceFromWall+this.corridorWidth)
-                ).y;
-        }
-        return- 1;
+        return -1; // Not enough space for the corridor
     }
+
+    // Calculate the middle point of the valid overlap range to align the corridor
+    int corridorCenterY = overlapStart + overlapHeight / 2;
+
+    return corridorCenterY;
+}
 
     private void ProcessRoomInRelationUpOrDown(Node structure1, Node structure2)
     {
@@ -185,41 +178,28 @@ public class CorridorNode : Node
         TopRightAreaCorner = new Vector2Int(x + this.corridorWidth, topStructure.BottomLeftAreaCorner.y);
     }
 
-    private int GetValidXForNeighbourUpDown(Vector2Int bottomNodeLeft, 
-        Vector2Int bottomNodeRight, Vector2Int topNodeLeft, Vector2Int topNodeRight)
+private int GetValidXForNeighbourUpDown(
+    Vector2Int bottomNodeLeft, Vector2Int bottomNodeRight,
+    Vector2Int topNodeLeft, Vector2Int topNodeRight)
+{
+    // Determine the overlapping start and end points on the X-axis
+    int overlapStart = Mathf.Max(bottomNodeLeft.x, topNodeLeft.x);
+    int overlapEnd = Mathf.Min(bottomNodeRight.x, topNodeRight.x);
+
+    // Calculate overlap width
+    int overlapWidth = overlapEnd - overlapStart;
+
+    // Ensure that the overlap area is wide enough for the corridor
+    if (overlapWidth < this.corridorWidth)
     {
-        if(topNodeLeft.x < bottomNodeLeft.x && bottomNodeRight.x < topNodeRight.x)
-        {
-            return StructureHelper.CalculateMiddlePoint(
-                bottomNodeLeft + new Vector2Int(modifierDistanceFromWall, 0),
-                bottomNodeRight - new Vector2Int(this.corridorWidth + modifierDistanceFromWall, 0)
-                ).x;
-        }
-        if(topNodeLeft.x >= bottomNodeLeft.x && bottomNodeRight.x >= topNodeRight.x)
-        {
-            return StructureHelper.CalculateMiddlePoint(
-                topNodeLeft+new Vector2Int(modifierDistanceFromWall,0),
-                topNodeRight - new Vector2Int(this.corridorWidth+modifierDistanceFromWall,0)
-                ).x;
-        }
-        if(bottomNodeLeft.x >= (topNodeLeft.x) && bottomNodeLeft.x <= topNodeRight.x)
-        {
-            return StructureHelper.CalculateMiddlePoint(
-                bottomNodeLeft + new Vector2Int(modifierDistanceFromWall,0),
-                topNodeRight - new Vector2Int(this.corridorWidth+modifierDistanceFromWall,0)
-
-                ).x;
-        }
-        if(bottomNodeRight.x <= topNodeRight.x && bottomNodeRight.x >= topNodeLeft.x)
-        {
-            return StructureHelper.CalculateMiddlePoint(
-                topNodeLeft + new Vector2Int(modifierDistanceFromWall, 0),
-                bottomNodeRight - new Vector2Int(this.corridorWidth + modifierDistanceFromWall, 0)
-
-                ).x;
-        }
-        return -1;
+        return -1; // Not enough space for the corridor
     }
+
+    // Calculate the middle point of the valid overlap range to align the corridor
+    int corridorCenterX = overlapStart + overlapWidth / 2;
+
+    return corridorCenterX;
+}
 
     private RelativePosition CheckPositionStructure2AgainstStructure1()
     {
