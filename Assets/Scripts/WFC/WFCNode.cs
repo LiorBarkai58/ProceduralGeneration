@@ -21,19 +21,20 @@ public class WFCNode : MonoBehaviour
     public void InitializeNode(WFCGrid parent)
     {
         ParentGrid = parent;
-        _domain = ParentGrid.GetDeafultDomain();
+        ResetDomain();  // clones default list for this node
     }
 
     public void ResetDomain()
     {
-        // IMPORTANT: clone, don’t share the same list across nodes
-        var src = ParentGrid.GetDeafultDomain();
-        _domain = (src != null) ? new List<WFCNodeOption>(src) : new List<WFCNodeOption>();
+        var def = ParentGrid != null ? ParentGrid.GetDeafultDomain() : null;
+        _domain = def != null ? new List<WFCNodeOption>(def) : new List<WFCNodeOption>();
+
 #if UNITY_EDITOR
-        DestroyImmediate(CollapsedObject);
+        if (CollapsedObject != null) DestroyImmediate(CollapsedObject);
 #else
-        Destroy(CollapsedObject);
+    if (CollapsedObject != null) Destroy(CollapsedObject);
 #endif
+        CollapsedObject = null;
         CollapsedSO = null;
         _isCollapsed = false;
         WFCOptionRotations = 0;
@@ -201,9 +202,8 @@ public class WFCNode : MonoBehaviour
             }
             else
             {
-                // Uncollapsed neighbor: we need existence of at least one neighbor option
-                // that is mutually compatible (strict), or at least one that we allow (lenient).
-                bool exists = false;
+                // UNCOLLAPSED neighbor
+                back = Opposite(dir);
                 var nbDomain = nb.GetDomain();
                 if (nbDomain == null || nbDomain.Count == 0)
                 {
@@ -211,24 +211,36 @@ public class WFCNode : MonoBehaviour
                     return false;
                 }
 
-                foreach (var nOpt in nbDomain)
+                allowedFromUs = option.GetLegatNeighbors(dir, rot);
+
+                bool exists = false;
+
+                // >>> FIX #2: in lenient mode, treat a NULL face list as WILDCARD-ALLOW <<<
+                if (!strictMutualForUncollapsed && allowedFromUs == null)
                 {
-                    if (nOpt == null) continue;
-                    if (allowedFromUs == null || !allowedFromUs.Contains(nOpt)) continue;
-
-                    if (!strictMutualForUncollapsed)
+                    exists = true; // allow anything for this face during lenient pruning
+                }
+                else
+                {
+                    foreach (var nOpt in nbDomain)
                     {
-                        exists = true; // lenient: we only require that WE allow at least one of theirs
-                        break;
-                    }
+                        if (nOpt == null) continue;
+                        if (allowedFromUs == null || !allowedFromUs.Contains(nOpt)) continue;
 
-                    // strict mutual: neighbor must have some rotation that allows us back
-                    for (int r2 = 0; r2 < 4; r2++)
-                    {
-                        var lst = nOpt.GetLegatNeighbors(back, r2);
-                        if (lst != null && lst.Contains(option)) { exists = true; break; }
+                        if (!strictMutualForUncollapsed)
+                        {
+                            exists = true; // we allow at least one of theirs; defer mutual check
+                            break;
+                        }
+
+                        // strict: there must exist a rotation of neighbor that allows us back
+                        for (int r2 = 0; r2 < 4; r2++)
+                        {
+                            var lst = nOpt.GetLegatNeighbors(back, r2);
+                            if (lst != null && lst.Contains(option)) { exists = true; break; }
+                        }
+                        if (exists) break;
                     }
-                    if (exists) break;
                 }
 
                 if (!exists)
@@ -463,7 +475,15 @@ public float GetCachedEntropy()
     public void InspectorSeed()
     {
         if (!_seedOption) return;
-        SeedCollapse(_seedOption, _seedRotation % 4);
+        if (SeedCollapse(_seedOption, _seedRotation % 4))
+        {
+            // immediately propagate from this node
+            var coords = ParentGrid.GetNodeCoords(this);
+            var idx = ParentGrid.ToIndex(coords);
+            // lenient during authoring
+            var ok = ParentGrid.PropagateFrom(idx, debug: true, strictMutualForUncollapsed: false);
+            if (!ok) Debug.LogError($"[WFC] Contradiction after seeding {_seedOption.name} at {coords}.");
+        }
     }
 
     /// Manually collapse this node into a specific option+rotation and lock it.

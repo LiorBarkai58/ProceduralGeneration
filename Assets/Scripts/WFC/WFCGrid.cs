@@ -12,7 +12,7 @@ public class WFCGrid : MonoBehaviour
     [SerializeField] private int DimY = 1;
     [SerializeField] private int DimZ = 1;
 
-    private Vector3Int CachedDimensions = new Vector3Int(1,1,1);
+    private Vector3Int CachedDimensions = new Vector3Int(1, 1, 1);
 
     [SerializeField] private WFCNode[] _grid = new WFCNode[0];
 
@@ -24,49 +24,90 @@ public class WFCGrid : MonoBehaviour
     public List<WFCNodeOption> GetDeafultDomain() => new(_DefaultDomain);
 
     [ContextMenu("Update Grid Dimensions")]
-    private void UpdateGrid()
+    public void UpdateGrid()
     {
-        
-        WFCNode[] newArr = new WFCNode[DimX * DimY * DimZ];
+        var newDims = new Vector3Int(DimX, DimY, DimZ);
+        var newArr = new WFCNode[newDims.x * newDims.y * newDims.z];
 
-        int i;
-        for (i = 0; i < _grid.Length; i++)
+        // 1) Move / keep old nodes (do NOT reset their domains)
+        if (_grid != null)
         {
-            Vector3Int coords = FromIndexCached(i);
 
-            if (IsWhithinBounds(coords))
+            for (int i = 0; i < _grid.Length; i++)
             {
-                newArr[ToIndex(coords)] = _grid[i];
-                newArr[ToIndex(coords)].ResetDomain();
-            }
-            else
-            {
+                var node = _grid[i];
+                if (node == null) continue;
+
+                var old = FromIndexCached(i); // uses old CachedDimensions
+                if (IsWhithinBounds(old))     // uses *new* DimX/Y/Z (your existing helper)
+                {
+                    int newIdx = old.x + old.y * newDims.x + old.z * newDims.x * newDims.y;
+                    newArr[newIdx] = node;
+
+                    // IMPORTANT: keep current domain/seed state — no InitializeNode/ResetDomain here
+                    node.transform.SetParent(transform, false);
+                    node.transform.localPosition = new Vector3(old.x, old.y, old.z);
+                }
+                else
+                {
+                    // out of new bounds: destroy old node
 #if UNITY_EDITOR
-                DestroyImmediate(_grid[i].gameObject);
+                    DestroyImmediate(node.gameObject);
 #else
-                Destroy(_grid[i].gameObject);
+                Destroy(node.gameObject);
 #endif
+                }
             }
         }
 
-        for (i = 0; i < newArr.Length; i++)
+        // 2) Create missing nodes (these DO need init + fresh domain)
+        for (int idx = 0; idx < newArr.Length; idx++)
         {
-            if (newArr[i] == null) newArr[i] = CreateNode(i);
+            if (newArr[idx] != null) continue;
+
+            var coords = new Vector3Int(
+                idx % newDims.x,
+                (idx / newDims.x) % newDims.y,
+                idx / (newDims.x * newDims.y)
+            );
+
+            var go = new GameObject($"WFCNode [{coords.x},{coords.y},{coords.z}]");
+            go.transform.SetParent(transform, false);
+            go.transform.localPosition = new Vector3(coords.x, coords.y, coords.z);
+
+            var node = go.AddComponent<WFCNode>();
+            newArr[idx] = node;
+
+            // initialize ONLY new nodes
+            node.InitializeNode(this); // inside, call ResetDomain() (clones default list)
+            node.GetEntropy();
         }
 
         _grid = newArr;
-        CachedDimensions = new Vector3Int(DimX, DimY, DimZ);
+        CachedDimensions = newDims;
 
-        for (i = 0; i< _grid.Length; i++)
-        {
-            _grid[i].ConstrainDomainFromNeighbors(out bool contradiction, true, false);
+        // optional: recompute entropies (non-destructive)
+        for (int i = 0; i < _grid.Length; i++)
             _grid[i].GetEntropy();
-        }
-
-        
-        
-        
     }
+
+#if UNITY_EDITOR
+    [ContextMenu("WFC/Reset All Domains (non-seed)")]
+    private void ResetAllDomainsNonSeed()
+    {
+        if (_grid == null) return;
+        for (int i = 0; i < _grid.Length; i++)
+        {
+            var n = _grid[i];
+            if (n == null) continue;
+            if (n.IsSeedLocked) continue;
+            n.ResetDomain();
+            n.GetEntropy();
+        }
+    }
+#endif
+
+
 
     public int ToIndex(int x, int y, int z)
     {
@@ -77,7 +118,7 @@ public class WFCGrid : MonoBehaviour
 
     public bool IsWhithinBounds(Vector3Int coords)
     {
-        return coords.x >= 0 && coords.y >= 0 && coords.z >= 0 && 
+        return coords.x >= 0 && coords.y >= 0 && coords.z >= 0 &&
             coords.x < DimX && coords.y < DimY && coords.z < DimZ;
 
     }
@@ -114,7 +155,7 @@ public class WFCGrid : MonoBehaviour
         return new Vector3Int(x, y, z);
     }
 
-    private WFCNode CreateNode(int index) 
+    private WFCNode CreateNode(int index)
     {
         WFCNode node;
 
@@ -300,7 +341,7 @@ public class WFCGrid : MonoBehaviour
 
     /// AC-3 style propagation: BFS outwards pruning neighbor domains.
     /// Returns false if any domain becomes empty (contradiction).
-    private bool PropagateFrom(int startIndex, bool debug, bool strictMutualForUncollapsed)
+    public bool PropagateFrom(int startIndex, bool debug, bool strictMutualForUncollapsed)
     {
         var q = new Queue<int>();
         var seen = new HashSet<int>();
@@ -395,5 +436,121 @@ public class WFCGrid : MonoBehaviour
     }
 
     #endregion
+
+
+    private System.Collections.Generic.List<NeighborDirection> GetOobFaces(UnityEngine.Vector3Int c)
+    {
+        var f = new System.Collections.Generic.List<NeighborDirection>(3);
+        if (c.x == 0) f.Add(NeighborDirection.NEGATIVEX);
+        if (c.x == DimX - 1) f.Add(NeighborDirection.POSITIVEX);
+        if (c.y == 0) f.Add(NeighborDirection.DOWN);
+        if (c.y == DimY - 1) f.Add(NeighborDirection.UP);
+        if (c.z == 0) f.Add(NeighborDirection.NEGATIVEZ);
+        if (c.z == DimZ - 1) f.Add(NeighborDirection.POSITIVEZ);
+        return f;
+    }
+
+    // Remove options that have no rotation allowing Boundary on ALL OOB faces
+    private bool PrefilterNodeDomainForBoundary(WFCNode n)
+    {
+        var boundary = GetBoundaryOption(); // can be null (then no filtering)
+        if (boundary == null) return false;
+
+        var coords = GetNodeCoords(n);
+        var oob = GetOobFaces(coords);
+        if (oob.Count == 0) return false; // interior cell → nothing to do
+
+        var dom = n.GetDomain();
+        if (dom == null || dom.Count == 0) return false;
+
+        var survivors = new System.Collections.Generic.List<WFCNodeOption>(dom.Count);
+        for (int i = 0; i < dom.Count; i++)
+        {
+            var opt = dom[i];
+            if (opt == null) continue;
+
+            bool okSomeRot = false;
+            for (int rot = 0; rot < 4 && !okSomeRot; rot++)
+            {
+                bool allFacesOk = true;
+                for (int j = 0; j < oob.Count; j++)
+                {
+                    var face = oob[j];
+                    var lst = opt.GetLegatNeighbors(face, rot);
+                    // accept reference OR name match (avoids duplicate-asset gotchas)
+                    bool allows = false;
+                    if (lst != null)
+                    {
+                        for (int k = 0; k < lst.Count; k++)
+                        {
+                            var o = lst[k];
+                            if (o == null) continue;
+                            if (object.ReferenceEquals(o, boundary) ||
+                                (!string.IsNullOrEmpty(o.GetName()) && o.GetName() == boundary.GetName()))
+                            { allows = true; break; }
+                        }
+                    }
+                    if (!allows) { allFacesOk = false; break; }
+                }
+                if (allFacesOk) okSomeRot = true;
+            }
+            if (okSomeRot) survivors.Add(opt);
+        }
+
+        if (survivors.Count == dom.Count) return false;
+        dom.Clear();
+        dom.AddRange(survivors);
+        return true;
+    }
+
+#if UNITY_EDITOR
+    [ContextMenu("WFC/Prepare Domains (Boundary + Seeds)")]
+    private void _ContextMenu_PrepareDomains()
+    {
+        PrepareDomains(debug: true);
+    }
+#endif
+
+    public void PrepareDomains(bool debug = false)
+    {
+        if (_grid == null || _grid.Length != DimX * DimY * DimZ)
+            UpdateGrid(); // structural only; does NOT reset reused nodes
+
+        // A) Boundary prefilter for NON-seed, NON-collapsed nodes
+        for (int i = 0; i < _grid.Length; i++)
+        {
+            var n = _grid[i];
+            if (n == null) continue;
+
+            if (!n.IsSeedLocked && !n.IsCollapsed())
+            {
+                // Ensure a domain exists (some editor workflows leave it null)
+                if (n.GetDomain() == null || n.GetDomain().Count == 0)
+                    n.ResetDomain();
+
+                PrefilterNodeDomainForBoundary(n);
+            }
+        }
+
+        // B) Propagate from all collapsed seeds (and any already collapsed nodes)
+        for (int i = 0; i < _grid.Length; i++)
+        {
+            var n = _grid[i];
+            if (n == null || !n.IsCollapsed()) continue;
+
+            // lenient mutual check during prep avoids over-pruning while authoring
+            if (!PropagateFrom(i, debug: false, strictMutualForUncollapsed: false))
+            {
+                if (debug) UnityEngine.Debug.LogError($"[WFC] Contradiction after prep from seed at {FromIndexCached(i)}.");
+                // early-out if you want; or continue to see all issues
+            }
+        }
+
+        // C) Refresh entropies once
+        for (int i = 0; i < _grid.Length; i++)
+            if (_grid[i] != null) _grid[i].GetEntropy();
+
+        if (debug) UnityEngine.Debug.Log("[WFC] Domains prepared (boundary-filtered + seeded propagation).");
+    }
 
 }

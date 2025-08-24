@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WFCNodeOption", menuName = "Scriptable Objects/WFCNodeOption")]
@@ -47,19 +47,31 @@ public class WFCNodeOption : ScriptableObject
 
     public float GetWeight() => WFCWeight;
     public string GetName() => Name;
- 
-    public List<WFCNodeOption> GetLegatNeighbors(NeighborDirection Direction, int Rotations = 0)
+
+    public List<WFCNodeOption> GetLegatNeighbors(NeighborDirection Direction, int Rotations)
     {
-        int adjustedIndex = ((int)Direction + Rotations) % 4;
+        // normalize to 0..3
+        int r = ((Rotations % 4) + 4) % 4;
 
+        // vertical faces do not rotate
         if (Direction == NeighborDirection.UP) return _LegalNeighborsUP;
-        else if (Direction == NeighborDirection.DOWN) return _LegalNeighborsDOWN;
-        else if (adjustedIndex == 0) return _LegalNeighborsPositiveZ;
-        else if (adjustedIndex == 1) return _LegalNeighborsPositiveX;
-        else if (adjustedIndex == 2) return _LegalNeighborsNegativeZ;
-        else return _LegalNeighborsNegativeX;
+        if (Direction == NeighborDirection.DOWN) return _LegalNeighborsDOWN;
 
+        // map world face -> local face by applying the inverse rotation (SUBTRACT r)
+        // your enum is: POSITIVEZ=0, POSITIVEX=1, NEGATIVEZ=2, NEGATIVEX=3
+        int dirIndex = (int)Direction;              // 0..3
+        int localIdx = ((dirIndex - r) % 4 + 4) % 4; // ← key change: subtract, not add
+
+        // now pick the list in LOCAL frame
+        switch (localIdx)
+        {
+            case 0: return _LegalNeighborsPositiveZ;
+            case 1: return _LegalNeighborsPositiveX;
+            case 2: return _LegalNeighborsNegativeZ;
+            default: return _LegalNeighborsNegativeX;
+        }
     }
+
 
     internal GameObject GetPrefab()
     {

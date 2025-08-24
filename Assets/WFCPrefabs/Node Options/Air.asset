@@ -25,6 +25,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8d16c5004d5710d438674cdb920a76a9, type: 2}
   - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
   - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
+  - {fileID: 11400000, guid: fe15e509c136f0c4f8ae10d59f546cec, type: 2}
   _LegalNeighborsPositiveX:
   - {fileID: 11400000, guid: 1e92d72dae747bf418577f9636a9b55e, type: 2}
   - {fileID: 11400000, guid: 09f7eeb8fa7395747914d4e14475c55b, type: 2}
