@@ -123,7 +123,7 @@ public class DungeonCreator : MonoBehaviour
                 if (room is RoomNode roomNode)
                 {
                     WFCGrid roomGrid = Instantiate(grid,
-                        new Vector3(room.BottomLeftAreaCorner.x + 0.5f, WallHeight * i, room.BottomLeftAreaCorner.y + 0.5f),
+                        new Vector3(room.BottomLeftAreaCorner.x + 0.5f, WallHeight * i -1, room.BottomLeftAreaCorner.y + 0.5f),
                         Quaternion.identity, transform);
                     roomGrid.DimX = roomNode.Width;
                     roomGrid.DimZ = roomNode.Length;
@@ -148,7 +148,7 @@ public class DungeonCreator : MonoBehaviour
                             {
                                 print("Creating at corridor");
                                 Vector2 exitCorridorMiddle = (roomNode.corridors[^1].BottomLeftAreaCorner + roomNode.corridors[^1].TopRightAreaCorner) / 2;
-                                Instantiate(doorPrefab, new Vector3(exitCorridorMiddle.x, WallHeight * i, exitCorridorMiddle.y), Quaternion.identity, transform).ConfigureHeight(WallHeight);
+                                Instantiate(doorPrefab, new Vector3(exitCorridorMiddle.x, WallHeight * i, exitCorridorMiddle.y), Quaternion.identity, transform).ConfigureHeight(WallHeight-1);
                                 Instantiate(key, new Vector3(currentRoomMiddle.x, WallHeight * i + 1, currentRoomMiddle.y), Quaternion.identity, transform);
                                 
                             }
@@ -199,7 +199,7 @@ public class DungeonCreator : MonoBehaviour
     {
         ConfigurableWall current = Instantiate(wallPrefab, wallPosition, Quaternion.identity, wallParent.transform);
         current.AddComponent<BoxCollider>();
-        current.ConfigureHeight(WallHeight);
+        current.ConfigureHeight(WallHeight-1);
         current.transform.localPosition = new Vector3(current.transform.localPosition.x, 0, current.transform.localPosition.z);
     }
 

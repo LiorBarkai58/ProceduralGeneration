@@ -118,7 +118,7 @@ private int GetValidYForNeighourLeftRight(
     }
 
     // Calculate the middle point of the valid overlap range to align the corridor
-    int corridorCenterY = overlapStart + overlapHeight / 2;
+    int corridorCenterY = overlapStart + overlapHeight / 2 -1;
 
     return corridorCenterY;
 }
@@ -196,7 +196,7 @@ private int GetValidXForNeighbourUpDown(
     }
 
     // Calculate the middle point of the valid overlap range to align the corridor
-    int corridorCenterX = overlapStart + overlapWidth / 2;
+    int corridorCenterX = overlapStart + overlapWidth / 2 - 1;
 
     return corridorCenterX;
 }
