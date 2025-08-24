@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 575707c2e2c4b7046983b5f6fd4128ff, type: 3}
+  m_Name: Boundary
+  m_EditorClassIdentifier: 
+  Name: Boundary
+  WFCWeight: 1
+  AttachedPrefab: {fileID: 0}
+  _LegalNeighborsUP:
+  - {fileID: 11400000, guid: 8d16c5004d5710d438674cdb920a76a9, type: 2}
+  _LegalNeighborsDOWN:
+  - {fileID: 11400000, guid: 43018f0571e772a428be7a9ec270f2c5, type: 2}
+  - {fileID: 11400000, guid: 1e92d72dae747bf418577f9636a9b55e, type: 2}
+  - {fileID: 11400000, guid: 09f7eeb8fa7395747914d4e14475c55b, type: 2}
+  - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
+  - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
+  _LegalNeighborsPositiveX:
+  - {fileID: 11400000, guid: 43018f0571e772a428be7a9ec270f2c5, type: 2}
+  - {fileID: 11400000, guid: 09f7eeb8fa7395747914d4e14475c55b, type: 2}
+  - {fileID: 11400000, guid: 8d16c5004d5710d438674cdb920a76a9, type: 2}
+  - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
+  - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
+  _LegalNeighborsNegativeX:
+  - {fileID: 11400000, guid: 43018f0571e772a428be7a9ec270f2c5, type: 2}
+  - {fileID: 11400000, guid: 09f7eeb8fa7395747914d4e14475c55b, type: 2}
+  - {fileID: 11400000, guid: 8d16c5004d5710d438674cdb920a76a9, type: 2}
+  - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
+  - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
+  _LegalNeighborsNegativeZ:
+  - {fileID: 11400000, guid: 43018f0571e772a428be7a9ec270f2c5, type: 2}
+  - {fileID: 11400000, guid: 09f7eeb8fa7395747914d4e14475c55b, type: 2}
+  - {fileID: 11400000, guid: 8d16c5004d5710d438674cdb920a76a9, type: 2}
+  - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
+  - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}
+  _LegalNeighborsPositiveZ:
+  - {fileID: 11400000, guid: 43018f0571e772a428be7a9ec270f2c5, type: 2}
+  - {fileID: 11400000, guid: 09f7eeb8fa7395747914d4e14475c55b, type: 2}
+  - {fileID: 11400000, guid: 8d16c5004d5710d438674cdb920a76a9, type: 2}
+  - {fileID: 11400000, guid: ac9a55dccf1ad1c44b752e18dc92e7c5, type: 2}
+  - {fileID: 11400000, guid: aa85d4018fa25414eb340c8c9633da39, type: 2}

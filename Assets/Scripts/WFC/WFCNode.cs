@@ -14,20 +14,30 @@ public class WFCNode : MonoBehaviour
     [SerializeField] private WFCGrid ParentGrid;
     [SerializeField] private float CachedEntropy = 1;
 
+    public WFCNodeOption GetCollapsedSO() => CollapsedSO;
+    public int GetRotation() => WFCOptionRotations;
+    public List<WFCNodeOption> GetDomain() => _domain;
+
     public void InitializeNode(WFCGrid parent)
     {
         ParentGrid = parent;
+        _domain = ParentGrid.GetDeafultDomain();
     }
 
     public void ResetDomain()
     {
-        _domain = ParentGrid.GetDeafultDomain();
+        // IMPORTANT: clone, don’t share the same list across nodes
+        var src = ParentGrid.GetDeafultDomain();
+        _domain = (src != null) ? new List<WFCNodeOption>(src) : new List<WFCNodeOption>();
 #if UNITY_EDITOR
         DestroyImmediate(CollapsedObject);
 #else
         Destroy(CollapsedObject);
 #endif
         CollapsedSO = null;
+        _isCollapsed = false;
+        WFCOptionRotations = 0;
+        CachedEntropy = 0f;
     }
 
     public bool IsCollapsed() => _isCollapsed;
@@ -85,52 +95,155 @@ public class WFCNode : MonoBehaviour
         return Hbits;
     }
 
-    public bool ConstrainDomainFromNeighbors(out bool contradiction)
+    /// Filters this node's domain using current neighbors' legal adjacencies,
+    /// then refreshes CachedEntropy. Returns true if the domain changed.
+    /// Sets 'contradiction' if the domain becomes empty.
+    /// Set debug=true to log why each option was removed.
+    public bool ConstrainDomainFromNeighbors(out bool contradiction, bool debug = false, bool strictMutualForUncollapsed = true)
     {
         contradiction = false;
 
-        if (_domain == null) { CachedEntropy = 0f; contradiction = true; return false; }
+        if (_domain == null)
+        {
+            if (debug) Debug.LogWarning("[WFC] Domain is null on node " + name);
+            _domain = new List<WFCNodeOption>();
+            CachedEntropy = 0f;
+            contradiction = true;
+            return false;
+        }
 
-        // If already collapsed, make sure the domain reflects that single choice and entropy is 0.
         if (_isCollapsed)
         {
-            bool changed = true;
-            if (_domain.Count == 1 && _domain[0] == CollapsedSO) changed = false;
+            // Ensure domain reflects the single chosen option
+            bool changed = !(_domain.Count == 1 && _domain[0] == CollapsedSO);
             _domain = new List<WFCNodeOption>(1) { CollapsedSO };
             CachedEntropy = 0f;
             return changed;
         }
 
-        // Keep only options that have at least one rotation consistent with neighbors.
         var survivors = new List<WFCNodeOption>(_domain.Count);
-        for (int i = 0; i < _domain.Count; i++)
+        foreach (var opt in _domain)
         {
-            var opt = _domain[i];
             if (opt == null) continue;
 
-            // Reuse your rotation/neighbor logic
-            if (FindLegalRotations(opt).Count > 0)
-                survivors.Add(opt);
+            bool okSomeRot = false;
+            for (int rot = 0; rot < 4 && !okSomeRot; rot++)
+            {
+                if (RotationConsistentAgainstNeighbors(opt, rot, strictMutualForUncollapsed, debug))
+                    okSomeRot = true;
+            }
+
+            if (okSomeRot) survivors.Add(opt);
+            else if (debug) Debug.Log($"[WFC] Removed option '{opt?.name ?? "<null>"}' at {ParentGrid.GetNodeCoords(this)}: no rotation satisfies neighbors.");
         }
 
-        // Detect change / contradiction
-        bool domainChanged = survivors.Count != _domain.Count;
+        bool changedDomain = survivors.Count != _domain.Count;
+
         if (survivors.Count == 0)
         {
-            _domain = survivors;        // empty domain
-            CachedEntropy = 0f;          // treat as contradiction / zero entropy
+            _domain = survivors;     // empty
+            CachedEntropy = 0f;
             contradiction = true;
-            return domainChanged;
+            if (debug) Debug.LogError("[WFC] CONTRADICTION: domain emptied at " + ParentGrid.GetNodeCoords(this));
+            return changedDomain;
         }
 
-        // Commit survivors and refresh cached entropy
         _domain = survivors;
-        GetEntropy(); // updates CachedEntropy internally
-
-        return domainChanged;
+        GetEntropy();                // refresh CachedEntropy
+        return changedDomain;
     }
 
-    public float GetCachedEntropy()
+    // --- Detailed rotation check with null guards and optional leniency ---
+    private bool RotationConsistentAgainstNeighbors(WFCNodeOption option, int rot, bool strictMutualForUncollapsed, bool debug)
+    {
+        // Faces to test (6-neighborhood)
+        NeighborDirection[] dirs = new[]{
+        NeighborDirection.UP, NeighborDirection.DOWN,
+        NeighborDirection.POSITIVEZ, NeighborDirection.NEGATIVEZ,
+        NeighborDirection.POSITIVEX, NeighborDirection.NEGATIVEX
+    };
+
+        foreach (var dir in dirs)
+        {
+            var allowedFromUs = option.GetLegatNeighbors(dir, rot); // may be null
+            var myCoords = ParentGrid.GetNodeCoords(this);
+            var nbCoords = myCoords + DirToDelta(dir);
+
+            // Out of bounds => boundary face must be allowed (if boundary is set)
+            if (!ParentGrid.IsWhithinBounds(nbCoords))
+            {
+                var boundary = ParentGrid.GetBoundaryOption();
+                bool ok = boundary == null || (allowedFromUs != null && allowedFromUs.Contains(boundary));
+                if (!ok)
+                {
+                    if (debug) Debug.Log($"[WFC] Fail '{option.name}' rot {rot} on {dir}: boundary not allowed.");
+                    return false;
+                }
+                continue;
+            }
+
+            // In-bounds neighbor
+            var nb = ParentGrid.GetNodeAt(nbCoords);
+            var back = Opposite(dir);
+
+            if (nb.IsCollapsed())
+            {
+                // Two-way check vs collapsed neighbor
+                bool usAllow = (allowedFromUs != null && allowedFromUs.Contains(nb.CollapsedSO));
+                var themList = nb.CollapsedSO.GetLegatNeighbors(back, nb.WFCOptionRotations);
+                bool themAllow = (themList != null && themList.Contains(option));
+                if (!(usAllow && themAllow))
+                {
+                    if (debug) Debug.Log($"[WFC] Fail '{option.name}' rot {rot} vs COLLAPSED @ {nbCoords} on {dir}: usAllow={usAllow}, themAllow={themAllow}");
+                    return false;
+                }
+            }
+            else
+            {
+                // Uncollapsed neighbor: we need existence of at least one neighbor option
+                // that is mutually compatible (strict), or at least one that we allow (lenient).
+                bool exists = false;
+                var nbDomain = nb.GetDomain();
+                if (nbDomain == null || nbDomain.Count == 0)
+                {
+                    if (debug) Debug.Log($"[WFC] Fail '{option.name}' rot {rot} on {dir}: neighbor has no domain.");
+                    return false;
+                }
+
+                foreach (var nOpt in nbDomain)
+                {
+                    if (nOpt == null) continue;
+                    if (allowedFromUs == null || !allowedFromUs.Contains(nOpt)) continue;
+
+                    if (!strictMutualForUncollapsed)
+                    {
+                        exists = true; // lenient: we only require that WE allow at least one of theirs
+                        break;
+                    }
+
+                    // strict mutual: neighbor must have some rotation that allows us back
+                    for (int r2 = 0; r2 < 4; r2++)
+                    {
+                        var lst = nOpt.GetLegatNeighbors(back, r2);
+                        if (lst != null && lst.Contains(option)) { exists = true; break; }
+                    }
+                    if (exists) break;
+                }
+
+                if (!exists)
+                {
+                    if (debug) Debug.Log($"[WFC] Fail '{option.name}' rot {rot} vs UNCOLLAPSED @ {nbCoords} on {dir}: no mutually compatible neighbor option.");
+                    return false;
+                }
+            }
+        }
+
+        return true; // all faces satisfied
+    }
+
+
+
+public float GetCachedEntropy()
     {
         return CachedEntropy;
     }
@@ -334,5 +447,70 @@ public class WFCNode : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region WFC Additions (Seeding, Safe Resets, Constraint-Driven Pruning)
+
+    // --- Seed lock ---
+    [SerializeField] private bool _isSeedLocked = false;
+    public bool IsSeedLocked => _isSeedLocked;
+
+    public bool SeedCollapse(WFCNodeOption option, int rot)
+    {
+        if (option == null) return false;
+
+        // Commit collapse
+        _isCollapsed = true;
+        CollapsedSO = option;
+        WFCOptionRotations = rot;
+        _isSeedLocked = true;
+
+        // Reflect in domain & entropy
+        _domain = new List<WFCNodeOption>(1) { option };
+        CachedEntropy = 0f;
+
+        // Refresh instance
+        if (CollapsedObject != null)
+        {
+#if UNITY_EDITOR
+            DestroyImmediate(CollapsedObject);
+#else
+        Destroy(CollapsedObject);
+#endif
+            CollapsedObject = null;
+        }
+
+        var p = option.GetPrefab();  
+        if (p != null)
+            CollapsedObject = Instantiate(p, transform.position, Quaternion.Euler(0, 90 * rot, 0), transform);
+
+        return true;
+    }
+
+    public void ClearCollapseIfNotLocked()
+    {
+        if (_isSeedLocked) return;
+        _isCollapsed = false;
+        CollapsedSO = null;
+        WFCOptionRotations = 0;
+
+        if (CollapsedObject != null)
+        {
+#if UNITY_EDITOR
+            DestroyImmediate(CollapsedObject);
+#else
+        Destroy(CollapsedObject);
+#endif
+            CollapsedObject = null;
+        }
+    }
+
+    
+    public void ResetDomainIfNotLocked()
+    {
+        if (_isSeedLocked) return;
+        ResetDomain();               
+        GetEntropy();                
+    }
     #endregion
 }

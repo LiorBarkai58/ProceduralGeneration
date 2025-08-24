@@ -49,7 +49,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4606447301614971689}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -153,4 +153,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d78a9a20231fc459be5ab5048105cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Domain: []
+  _domain: []
+  _isCollapsed: 0
+  CollapsedSO: {fileID: 0}
+  CollapsedObject: {fileID: 0}
+  WFCOptionRotations: 0
+  ParentGrid: {fileID: 0}
+  CachedEntropy: 1
+  _isSeedLocked: 0
